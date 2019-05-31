@@ -1,0 +1,101 @@
+C51 COMPILER V9.02   LED                                                                   05/29/2019 08:52:08 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN LED.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE LED.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit ADDR0 = P1^0;
+   3          sbit ADDR1 = P1^1;
+   4          sbit ADDR2 = P1^2;
+   5          
+   6          unsigned char code LedCharYin[] = {
+   7                  0x3f, 0x06, 0x5b, 0x4f,
+   8                  0x66, 0x6d, 0x7d, 0x07,
+   9                  0x7f, 0x6f, 0x77, 0x7c,
+  10                  0x39, 0x5e, 0x79, 0x71
+  11          };
+  12          
+  13          unsigned char code LedCharYang[] = {
+  14                  0xC0, 0xF9, 0xA4, 0xB0, 
+  15                  0x99, 0x92, 0x82, 0xF8,
+  16                  0x80, 0x90, 0x88, 0x83, 
+  17                  0xC6, 0xA1, 0x86, 0x8E  
+  18          };
+  19          
+  20          unsigned char LedBuff[8] = {
+  21                  0xff,0xff,0xff,0xff,
+  22                  0xff,0xff,0xff,0xff
+  23          };
+  24          
+  25          unsigned int cnt = 0;
+  26          unsigned long sec = 0;
+  27          unsigned char i = 0;
+  28          
+  29          void main()
+  30          {       
+  31   1              //ÖÐ¶Ï
+  32   1              EA = 1; 
+  33   1              ET0 = 1;                  
+  34   1              //¼ÆÊ±Æ÷
+  35   1              TMOD = 0x01;
+  36   1              TH0 = 0xFC;//1ms
+  37   1              TL0 = 0x1A;
+  38   1              TR0 = 1;
+  39   1      
+  40   1              while (1){
+  41   2                      if(cnt % 100==0){
+  42   3                              P0 = LedCharYang[cnt/100%10];
+  43   3                      }
+  44   2                      if(cnt>=1000){
+  45   3                              cnt = 0;
+  46   3                              sec++;
+  47   3                              LedBuff[0] = LedCharYin[sec%10];
+  48   3                              LedBuff[1] = LedCharYin[sec/10%10];
+  49   3                              LedBuff[2] = LedCharYin[sec/100%10];
+  50   3                              LedBuff[3] = LedCharYin[sec/1000%10];
+  51   3                              LedBuff[4] = LedCharYin[sec/10000%10];
+  52   3                              LedBuff[5] = LedCharYin[sec/100000%10];
+  53   3                              LedBuff[6] = LedCharYin[sec/1000000%10];
+  54   3                              LedBuff[7] = LedCharYin[sec/10000000%10];                                                       
+  55   3                      }
+C51 COMPILER V9.02   LED                                                                   05/29/2019 08:52:08 PAGE 2   
+
+  56   2              }
+  57   1      }
+  58          
+  59          void InterruptTimer() interrupt 1{
+  60   1              TH0 = 0xFC;
+  61   1              TL0 = 0x1A;
+  62   1              cnt++;
+  63   1      
+  64   1              P2 = 0x00;
+  65   1              switch(i){
+  66   2                      case 0: ADDR2 = 1;ADDR1 = 1;ADDR0 = 1;i++;P2=LedBuff[0];break;
+  67   2                      case 1: ADDR2 = 1;ADDR1 = 1;ADDR0 = 0;i++;P2=LedBuff[1];break;
+  68   2                      case 2: ADDR2 = 1;ADDR1 = 0;ADDR0 = 1;i++;P2=LedBuff[2];break;
+  69   2                      case 3: ADDR2 = 1;ADDR1 = 0;ADDR0 = 0;i++;P2=LedBuff[3];break;
+  70   2                      case 4: ADDR2 = 0;ADDR1 = 1;ADDR0 = 1;i++;P2=LedBuff[4];break;
+  71   2                      case 5: ADDR2 = 0;ADDR1 = 1;ADDR0 = 0;i++;P2=LedBuff[5];break;
+  72   2                      case 6: ADDR2 = 0;ADDR1 = 0;ADDR0 = 1;i++;P2=LedBuff[6];break;
+  73   2                      case 7: ADDR2 = 0;ADDR1 = 0;ADDR0 = 0;i=0;P2=LedBuff[7];break;
+  74   2                      default:break;                                                                                    
+  75   2              }
+  76   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    605    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,118 @@
+C51 COMPILER V9.02   UART                                                                  05/31/2019 10:40:39 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN uart.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE uart.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2           unsigned char code LedCharYang[] = {
+   3                  0xC0, 0xF9, 0xA4, 0xB0, 
+   4                  0x99, 0x92, 0x82, 0xF8,
+   5                  0x80, 0x90, 0x88, 0x83, 
+   6                  0xC6, 0xA1, 0x86, 0x8E  
+   7          };
+   8          
+   9          unsigned char code LedCharYin[] = {
+  10                  0x3f, 0x06, 0x5b, 0x4f,
+  11                  0x66, 0x6d, 0x7d, 0x07,
+  12                  0x7f, 0x6f, 0x77, 0x7c,
+  13                  0x39, 0x5e, 0x79, 0x71
+  14          };
+  15          unsigned char LedBuff[8] = {
+  16                  0xff,0xff,0x76,0x3f,
+  17                  0x40,0x40,0x40,0x40
+  18          };
+  19          
+  20          unsigned char T0RH=0;
+  21          unsigned char T0RL=0;
+  22          unsigned char RxdByte=0;
+  23          
+  24          void ConfigTimer0(unsigned int ms);
+  25          void ConfigUART(unsigned int baud);
+  26          
+  27          void main(void){
+  28   1              EA=1;
+  29   1              ConfigTimer0(1);
+  30   1              ConfigUART(9600);
+  31   1              while(1){
+  32   2                      LedBuff[0] = LedCharYin[RxdByte&0x0f];
+  33   2                      LedBuff[1] = LedCharYin[RxdByte>>4];
+  34   2              }
+  35   1      }
+  36          
+  37          
+  38          void ConfigTimer0(unsigned int ms){
+  39   1              unsigned long temp;
+  40   1              temp=12000000/12;
+  41   1              temp=temp/1000*ms;
+  42   1              temp=65536-temp;
+  43   1              temp=temp+13;
+  44   1              T0RH=(unsigned char)(temp>>8);
+  45   1              T0RL=(unsigned char)temp;
+  46   1              TMOD&=0xf0;
+  47   1              TMOD|=0x01;
+  48   1              TH0=T0RH;
+  49   1              TL0=T0RL;
+  50   1              ET0=1;
+  51   1              TR0=1;
+  52   1      }
+  53          
+  54          void ConfigUART(unsigned int baud){
+  55   1              SCON  =0x50;
+C51 COMPILER V9.02   UART                                                                  05/31/2019 10:40:39 PAGE 2   
+
+  56   1              TMOD &=0x0f;
+  57   1              TMOD |=0x20;
+  58   1              PCON |=0x80;
+  59   1              TH1     =256-(11973000/12/16)/baud;
+  60   1              TL1 = TH1;
+  61   1              ET1 = 0;
+  62   1              ES = 1;
+  63   1              TR1 = 1;
+  64   1      }
+  65          
+  66          void LedScan(){
+  67   1              static unsigned char i = 0;
+  68   1              P0=0x00;
+  69   1              P1=(P1&0xF8)|~i;
+  70   1              P0=LedBuff[i];
+  71   1              if(i<7){
+  72   2                      i++;
+  73   2              }else{
+  74   2                      i=0;
+  75   2              }
+  76   1      }
+  77          
+  78          void InterruptTimer() interrupt 1{
+  79   1              TH0=T0RH;
+  80   1              TL0=T0RL;
+  81   1              LedScan();
+  82   1      }
+  83          
+  84          void InterruptUART() interrupt 4{
+  85   1              if(RI){
+  86   2                      RI=0;
+  87   2                      RxdByte=SBUF;
+  88   2                      SBUF=RxdByte;
+  89   2              }
+  90   1              if(TI){
+  91   2                      TI=0;
+  92   2              }
+  93   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    298    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

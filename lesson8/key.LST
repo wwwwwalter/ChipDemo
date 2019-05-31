@@ -1,0 +1,138 @@
+C51 COMPILER V9.02   KEY                                                                   05/29/2019 20:03:42 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN key.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE key.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          
+   4          sbit Key0 = P2^0;
+   5          sbit Key1 = P2^1;
+   6          sbit Key2 = P2^2;
+   7          sbit Key3 = P2^3;
+   8          sbit Key4 = P2^4;
+   9          sbit Key5 = P2^5;
+  10          sbit Key6 = P2^6;
+  11          sbit Key7 = P2^7;
+  12          
+  13          unsigned char code LedCharYin[] = {
+  14                  0x3f, 0x06, 0x5b, 0x4f,
+  15                  0x66, 0x6d, 0x7d, 0x07,
+  16                  0x7f, 0x6f, 0x77, 0x7c,
+  17                  0x39, 0x5e, 0x79, 0x71
+  18          };
+  19          
+  20          unsigned char code LedCharYang[] = {
+  21                  0xC0, 0xF9, 0xA4, 0xB0, 
+  22                  0x99, 0x92, 0x82, 0xF8,
+  23                  0x80, 0x90, 0x88, 0x83, 
+  24                  0xC6, 0xA1, 0x86, 0x8E  
+  25          };
+  26          
+  27          
+  28          void delay(){
+  29   1              unsigned int i = 1000;
+  30   1              while(i--);
+  31   1      }
+  32          
+  33          bit KeySta = 1;
+  34          void main(void){
+  35   1      
+  36   1      
+  37   1              bit backup = 1;
+  38   1              bit keybuf = 1;
+  39   1              unsigned char cnt= 0;
+  40   1              P0 = LedCharYang[0];
+  41   1              P2 = 0xFF; 
+  42   1      
+  43   1              /*while(1){     
+  44   1                 if(Key0==0){P0 = LedCharYang[0];}
+  45   1                 if(Key1==0){P0 = LedCharYang[1];}
+  46   1                 if(Key2==0){P0 = LedCharYang[2];}
+  47   1                 if(Key3==0){P0 = LedCharYang[3];}
+  48   1                 if(Key4==0){P0 = LedCharYang[4];}
+  49   1                 if(Key5==0){P0 = LedCharYang[5];}
+  50   1                 if(Key6==0){P0 = LedCharYang[6];}
+  51   1                 if(Key7==0){P0 = LedCharYang[7];}
+  52   1                 }*/
+  53   1      
+  54   1              
+  55   1      
+C51 COMPILER V9.02   KEY                                                                   05/29/2019 20:03:42 PAGE 2   
+
+  56   1              /*while(1){
+  57   1                      keybuf = Key0;
+  58   1                      if(keybuf!=backup){
+  59   1                              delay();//µÈ´ýKey0ÎÈ¶¨
+  60   1                              if(keybuf==Key0){
+  61   1                                      if(backup==0){
+  62   1                                              cnt++;
+  63   1                                              if(cnt>=10){
+  64   1                                                      cnt = 0;
+  65   1                                              }
+  66   1                                              P0=LedCharYang[cnt];
+  67   1                                      }
+  68   1                                      backup = keybuf;        
+  69   1                              }
+  70   1                      }       
+  71   1              }*/
+  72   1      
+  73   1      
+  74   1      
+  75   1              EA=1;
+  76   1              TMOD = 0x01;
+  77   1              TH0 = 0xf8;
+  78   1              TL0 = 0xcd;
+  79   1              ET0= 1;
+  80   1              TR0 = 1;
+  81   1      
+  82   1              while(1){
+  83   2                      if(KeySta!=backup){
+  84   3                              if(backup==0){
+  85   4                                      cnt++;
+  86   4                                      if(cnt>=10){
+  87   5                                              cnt=0;
+  88   5                                      }
+  89   4                                      P0 = LedCharYang[cnt];
+  90   4                              }                                                 
+  91   3                              backup=KeySta;
+  92   3                      }
+  93   2              }
+  94   1      }
+  95          
+  96          void InterruptTimer() interrupt 1{
+  97   1              static unsigned char keybuf = 0xff;
+  98   1      
+  99   1              TH0 = 0xf8;
+ 100   1              TL0 = 0xcd;
+ 101   1      
+ 102   1              keybuf = (keybuf<<1)|Key0;
+ 103   1      
+ 104   1              if(keybuf==0x00){
+ 105   2                      KeySta = 0;
+ 106   2              }else if(keybuf==0xff){
+ 107   2                      KeySta = 1;
+ 108   2              }else{
+ 109   2                      ;
+ 110   2              }
+ 111   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    125    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.02   KEY                                                                   05/29/2019 20:03:42 PAGE 3   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,137 @@
+C51 COMPILER V9.02   UART                                                                  05/31/2019 05:36:24 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN uart.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE uart.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          unsigned char code LedCharYang[] = {
+   4                  0xC0, 0xF9, 0xA4, 0xB0, 
+   5                  0x99, 0x92, 0x82, 0xF8,
+   6                  0x80, 0x90, 0x88, 0x83, 
+   7                  0xC6, 0xA1, 0x86, 0x8E  
+   8          };
+   9          
+  10          sbit PIN_RXD=P3^0;
+  11          sbit PIN_TXD=P3^1;
+  12          
+  13          bit RxdOrTxd = 0;
+  14          bit RxdEnd = 0;
+  15          bit TxdEnd = 0;
+  16          
+  17          unsigned char RxdBuf = 0;
+  18          unsigned char TxdBuf = 0;
+  19          
+  20          void ConfigUART(unsigned int baud);
+  21          void StartTXD(unsigned char dat);
+  22          void StartRXD();
+  23          
+  24          void main(void){
+  25   1              EA=1;
+  26   1              ConfigUART(9600);
+  27   1              while(1){
+  28   2                              
+  29   2                      while(PIN_RXD);
+  30   2                      StartRXD();
+  31   2                      while(!RxdEnd);
+  32   2                      P0=LedCharYang[RxdBuf];
+  33   2                      StartTXD(RxdBuf);
+  34   2                      while(!TxdEnd);
+  35   2              
+  36   2              /*
+  37   2                      unsigned char i;
+  38   2                      unsigned int j;
+  39   2                      for(i = 0;i<16;++i){
+  40   2                              StartTXD(i);
+  41   2                              while(!TxdEnd);
+  42   2                              P0 = LedCharYang[i];
+  43   2                              for(j = 0;j<30000;j++);
+  44   2                      }
+  45   2              */
+  46   2      
+  47   2              }
+  48   1      }
+  49          
+  50          void ConfigUART(unsigned int band){
+  51   1              TMOD &=0xf0;//force
+  52   1              TMOD |=0x02;//add
+  53   1              TH0       =     256-(12000000/12)/band;  //256-96=160~256
+  54   1      }
+  55          
+C51 COMPILER V9.02   UART                                                                  05/31/2019 05:36:24 PAGE 2   
+
+  56          void StartRXD(){
+  57   1              TL0=256-((256-TH0)>>1);
+  58   1              ET0=1;
+  59   1              TR0=1;
+  60   1              RxdEnd=0;
+  61   1              RxdOrTxd=0;
+  62   1      }
+  63          
+  64          void StartTXD(unsigned char dat){
+  65   1              TxdBuf = dat;
+  66   1              TL0=TH0;
+  67   1              ET0=1;
+  68   1              TR0=1;
+  69   1              PIN_TXD=0;
+  70   1              TxdEnd=0;
+  71   1              RxdOrTxd=1;
+  72   1      }
+  73          
+  74          void InterruptTimer() interrupt 1{
+  75   1              static unsigned char cnt = 0;
+  76   1              if(RxdOrTxd){
+  77   2                      cnt++;
+  78   2                      if(cnt<=8){
+  79   3                              PIN_TXD=TxdBuf&0x01;
+  80   3                              TxdBuf>>=1;
+  81   3                      }else if(cnt==9){
+  82   3                              PIN_TXD=1;
+  83   3                              cnt=0;
+  84   3                              TR0=0;
+  85   3                              TxdEnd=1;
+  86   3                      }
+  87   2              }else{
+  88   2                      if(cnt==0){
+  89   3                              if(!PIN_RXD){
+  90   4                                      RxdBuf=0;
+  91   4                                      cnt++;
+  92   4                              }else{
+  93   4                                      TR0=0;
+  94   4                              }
+  95   3                      }else if(cnt<=8){
+  96   3                              RxdBuf>>=1;
+  97   3                              if(PIN_RXD){
+  98   4                                      RxdBuf |=0x80;
+  99   4                              }
+ 100   3                              cnt++;
+ 101   3                      }else{
+ 102   3                              cnt=0;
+ 103   3                              TR0=0;
+ 104   3                              if(PIN_RXD){
+ 105   4                                      RxdEnd=1;
+ 106   4                              }
+ 107   3                      }
+ 108   2              }
+ 109   1      }
+ 110          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    208    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.02   UART                                                                  05/31/2019 05:36:24 PAGE 3   
+
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
