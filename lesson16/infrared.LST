@@ -1,0 +1,112 @@
+C51 COMPILER V9.02   INFRARED                                                              06/01/2019 03:34:52 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE INFRARED
+OBJECT MODULE PLACED IN infrared.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE infrared.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          sbit IR_INPUT=P3^3;
+   4          bit irflag=0;
+   5          unsigned char ircode[4];
+   6          
+   7          void InitInfrared(){  
+   8   1              IR_INPUT=1;
+   9   1              TMOD&=0x0f;
+  10   1              TMOD|=0x10;
+  11   1              TR1=0;
+  12   1              ET1=0;
+  13   1              IT1=1;
+  14   1              EX1=1;
+  15   1      }
+  16          
+  17          unsigned int GetHighTime(){
+  18   1              TH1=0;
+  19   1              TL1=0;
+  20   1              TR1=1;
+  21   1              while(IR_INPUT){
+  22   2                      if(TH1>=0x47){
+  23   3                              break;
+  24   3                      }
+  25   2              }
+  26   1              TR1=0;
+  27   1              return (TH1*256+TL1);                     
+  28   1      }
+  29          
+  30          unsigned int GetLowTime(){
+  31   1         TH1=0;
+  32   1         TL1=0;
+  33   1         TR1=1;
+  34   1         while(!IR_INPUT){
+  35   2                      if(TH1>=0x47){
+  36   3                              break;
+  37   3                      }
+  38   2              }
+  39   1         TR1=0;
+  40   1         return (TH1*256+TL1);
+  41   1      }
+  42          
+  43          
+  44          void EXINT1_ISR() interrupt 2{  
+  45   1              unsigned char i,j;
+  46   1              unsigned char byt;
+  47   1              unsigned int time;
+  48   1               P0=0x06;
+  49   1              time = GetLowTime();
+  50   1              if((time<8500)||(time>9500)){
+  51   2                      IE1=0;
+  52   2                      return;
+  53   2              }
+  54   1              
+  55   1              time=GetHighTime();
+C51 COMPILER V9.02   INFRARED                                                              06/01/2019 03:34:52 PAGE 2   
+
+  56   1              if((time<4000)||(time>5000)){
+  57   2                      IE1=0;
+  58   2                      return;
+  59   2              } 
+  60   1              
+  61   1              for(i=0;i<4;++i){
+  62   2                      for(j=0;j<8;++j){
+  63   3                              time=GetLowTime();
+  64   3                              if((time<340)||(time>780)){
+  65   4                                      IE1=0;
+  66   4                                      return;
+  67   4                              }
+  68   3                              time=GetHighTime();
+  69   3                              if((time>340)&&(time<780)){
+  70   4                                      byt>>=1;
+  71   4                              }else if((time>1460)&&(time<1900)){
+  72   4                                      byt>>=1;
+  73   4                                      byt|=0x80;
+  74   4                              }else{
+  75   4                                      IE1=0;
+  76   4                                      return;
+  77   4                              }
+  78   3                      }
+  79   2                      ircode[i]=byt;
+  80   2              }
+  81   1              irflag=1;
+  82   1              IE1=0;
+  83   1      }
+  84          
+  85          
+  86          
+  87          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    288    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
