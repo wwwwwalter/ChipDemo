@@ -741,3 +741,48 @@ linking...
 Program Size: data=38.5 xdata=0 code=1379
 creating hex file from "18b20"...
 "18b20" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 18b20.c...
+linking...
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?GET18B20ACK?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?START18B20?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+Program Size: data=38.5 xdata=0 code=1376
+creating hex file from "18b20"...
+"18b20" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 18b20.c...
+linking...
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?GET18B20ACK?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?START18B20?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+Program Size: data=38.5 xdata=0 code=1388
+creating hex file from "18b20"...
+"18b20" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 18b20.c...
+linking...
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?GET18B20ACK?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?START18B20?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+Program Size: data=38.5 xdata=0 code=1386
+creating hex file from "18b20"...
+"18b20" - 0 Error(s), 2 Warning(s).
