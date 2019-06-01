@@ -1,0 +1,491 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        06/01/2019  11:15:08  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\DEV\PROGRAM\51\C51\BIN\BL51.EXE STARTUP.obj, 18b20.obj TO 18b20 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  18b20.obj (18B20)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C_INIT)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?CSTOPTR)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?IMUL)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?UIDIV)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?ISTPTR)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?LMUL)
+  C:\DEV\PROGRAM\51\C51\LIB\C51S.LIB (?C?ULSHR)
+
+
+LINK MAP OF MODULE:  18b20 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         _DATA_GROUP_
+                    000CH     0014H                  *** GAP ***
+            BIT     0020H.0   0000H.4   UNIT         _BIT_GROUP_
+            BIT     0020H.4   0000H.1   UNIT         ?BI?18B20
+                    0020H.5   0000H.3                *** GAP ***
+            DATA    0021H     0019H     UNIT         ?DT?18B20
+            IDATA   003AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     000BH     UNIT         ?PR?_DELAY10US?18B20
+                    0019H     0002H                  *** GAP ***
+            CODE    001BH     0003H     ABSOLUTE     
+            CODE    001EH     0130H     UNIT         ?PR?_CONVERT?18B20
+            CODE    014EH     010AH     UNIT         ?C?LIB_CODE
+            CODE    0258H     008CH     UNIT         ?C_C51STARTUP
+            CODE    02E4H     0062H     UNIT         ?PR?_CONFIGTIMER0?18B20
+            CODE    0346H     0062H     UNIT         ?PR?_CONFIGTIMER1?18B20
+            CODE    03A8H     004CH     UNIT         ?PR?MAIN?18B20
+            CODE    03F4H     004CH     UNIT         ?PR?INTERRUPTTIMER1?18B20
+            CODE    0440H     002EH     UNIT         ?PR?_GET18B20TEMP?18B20
+            CODE    046EH     002AH     UNIT         ?PR?READ18B20?18B20
+            CODE    0498H     0026H     UNIT         ?PR?_WRITE18B20?18B20
+            CODE    04BEH     0025H     UNIT         ?C_INITSEG
+            CODE    04E3H     0024H     UNIT         ?PR?LEDSCAN?18B20
+            CODE    0507H     001DH     UNIT         ?PR?INTERRUPTTIMER0?18B20
+            CODE    0524H     001CH     UNIT         ?PR?GET18B20ACK?18B20
+            CODE    0540H     0016H     UNIT         ?PR?START18B20?18B20
+            CODE    0556H     0012H     UNIT         ?CO?18B20
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 2
+
+
+
+
+
+OVERLAY MAP OF MODULE:   18b20 (?C_STARTUP)
+
+
+SEGMENT                              BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT             START    LENGTH     START    LENGTH
+---------------------------------------------------------------------
+?C_C51STARTUP                     -----    -----      -----    -----
+  +--> ?PR?MAIN?18B20
+  +--> ?C_INITSEG
+
+?PR?MAIN?18B20                    -----    -----      -----    -----
+  +--> ?PR?START18B20?18B20
+  +--> ?PR?_CONFIGTIMER0?18B20
+  +--> ?PR?_CONFIGTIMER1?18B20
+  +--> ?PR?_CONVERT?18B20
+  +--> ?CO?18B20
+
+?PR?START18B20?18B20              0020H.2  0000H.1    -----    -----
+  +--> ?PR?GET18B20ACK?18B20
+  +--> ?PR?_WRITE18B20?18B20
+
+?PR?GET18B20ACK?18B20             0020H.3  0000H.1    -----    -----
+  +--> ?PR?_DELAY10US?18B20
+
+?PR?_WRITE18B20?18B20             -----    -----      -----    -----
+  +--> ?PR?_DELAY10US?18B20
+
+?PR?_CONFIGTIMER0?18B20           -----    -----      0008H    0004H
+
+?PR?_CONFIGTIMER1?18B20           -----    -----      0008H    0004H
+
+?PR?_CONVERT?18B20                0020H.0  0000H.1    0008H    0004H
+
+*** NEW ROOT ***************************************************
+
+?PR?INTERRUPTTIMER0?18B20         -----    -----      -----    -----
+  +--> ?PR?LEDSCAN?18B20
+
+*** NEW ROOT ***************************************************
+
+?PR?INTERRUPTTIMER1?18B20         -----    -----      -----    -----
+  +--> ?PR?_GET18B20TEMP?18B20
+  +--> ?PR?START18B20?18B20
+
+?PR?_GET18B20TEMP?18B20           0020H.2  0000H.1    -----    -----
+  +--> ?PR?GET18B20ACK?18B20
+  +--> ?PR?_WRITE18B20?18B20
+  +--> ?PR?READ18B20?18B20
+
+?PR?READ18B20?18B20               -----    -----      -----    -----
+  +--> ?PR?_DELAY10US?18B20
+
+
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 3
+
+
+SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0258H         SEGMENT       ?C_C51STARTUP
+  I:003AH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:025BH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0258H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0258H         LINE#         133
+  C:025AH         LINE#         134
+  C:025BH         LINE#         135
+  C:025CH         LINE#         136
+  C:025EH         LINE#         185
+  C:0261H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        18B20
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:0022H         PUBLIC        decT
+  D:00B0H         PUBLIC        P3
+  C:001EH         PUBLIC        _convert
+  B:00A8H.7       PUBLIC        EA
+  B:00B0H.7       PUBLIC        IO_18B20
+  C:0507H         PUBLIC        InterruptTimer0
+  C:03F4H         PUBLIC        InterruptTimer1
+  C:046EH         PUBLIC        Read18B20
+  D:00A8H         PUBLIC        IE
+  C:02E4H         PUBLIC        _ConfigTimer0
+  C:0346H         PUBLIC        _ConfigTimer1
+  D:00B8H         PUBLIC        IP
+  B:0020H.4       PUBLIC        flag
+  D:0024H         PUBLIC        LedBuff
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 4
+
+
+  C:0498H         PUBLIC        _Write18B20
+  C:04E3H         PUBLIC        LedScan
+  D:002CH         PUBLIC        T0RH
+  D:002DH         PUBLIC        T1RH
+  C:0540H         PUBLIC        Start18B20
+  D:002EH         PUBLIC        intT
+  D:002FH         PUBLIC        T0RL
+  D:0030H         PUBLIC        T1RL
+  C:03A8H         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:0031H         PUBLIC        temp
+  C:000EH         PUBLIC        _Delay10us
+  C:0524H         PUBLIC        Get18B20Ack
+  C:0440H         PUBLIC        _Get18B20Temp
+  C:0556H         PUBLIC        LedCharYin
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  D:008CH         PUBLIC        TH0
+  D:008DH         PUBLIC        TH1
+  D:008AH         PUBLIC        TL0
+  D:008BH         PUBLIC        TL1
+  B:00B8H.1       PUBLIC        PT0
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  D:0033H         PUBLIC        out
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          MAIN
+  C:03A8H         LINE#         45
+  C:03A8H         LINE#         46
+  C:03AAH         LINE#         47
+  C:03ADH         LINE#         48
+  C:03AEH         LINE#         49
+  C:03AFH         LINE#         50
+  C:03B4H         LINE#         51
+  C:03B9H         LINE#         52
+  C:03BBH         LINE#         54
+  C:03BBH         LINE#         55
+  C:03BEH         LINE#         56
+  C:03C0H         LINE#         57
+  C:03C9H         LINE#         58
+  C:03D1H         LINE#         59
+  C:03D6H         LINE#         60
+  C:03DBH         LINE#         61
+  C:03DEH         LINE#         62
+  C:03E3H         LINE#         63
+  C:03E8H         LINE#         64
+  C:03EDH         LINE#         65
+  C:03F2H         LINE#         66
+  C:03F2H         LINE#         67
+  -------         ENDPROC       MAIN
+  -------         PROC          _CONVERT
+  D:0008H         SYMBOL        out
+  -------         DO            
+  D:000BH         SYMBOL        i
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 5
+
+
+  B:0020H.0       SYMBOL        sig
+  -------         ENDDO         
+  C:001EH         LINE#         70
+  C:0024H         LINE#         71
+  C:0027H         LINE#         73
+  C:0038H         LINE#         74
+  C:004AH         LINE#         75
+  C:0053H         LINE#         77
+  C:006DH         LINE#         78
+  C:008CH         LINE#         79
+  C:00B3H         LINE#         80
+  C:00DAH         LINE#         81
+  C:0101H         LINE#         83
+  C:0116H         LINE#         84
+  C:012FH         LINE#         86
+  C:0142H         LINE#         87
+  C:014DH         LINE#         88
+  -------         ENDPROC       _CONVERT
+  -------         PROC          _CONFIGTIMER0
+  D:0007H         SYMBOL        ms
+  -------         DO            
+  D:0008H         SYMBOL        tmp
+  -------         ENDDO         
+  C:02E4H         LINE#         91
+  C:02E4H         LINE#         93
+  C:02F9H         LINE#         94
+  C:030FH         LINE#         95
+  C:0324H         LINE#         96
+  C:0332H         LINE#         97
+  C:0335H         LINE#         98
+  C:0338H         LINE#         99
+  C:033BH         LINE#         100
+  C:033EH         LINE#         101
+  C:0341H         LINE#         102
+  C:0343H         LINE#         103
+  C:0345H         LINE#         104
+  -------         ENDPROC       _CONFIGTIMER0
+  -------         PROC          LEDSCAN
+  -------         DO            
+  D:0021H         SYMBOL        i
+  -------         ENDDO         
+  C:04E3H         LINE#         105
+  C:04E3H         LINE#         107
+  C:04E6H         LINE#         108
+  C:04F1H         LINE#         109
+  C:04F9H         LINE#         110
+  C:0500H         LINE#         111
+  C:0502H         LINE#         112
+  C:0503H         LINE#         113
+  C:0506H         LINE#         114
+  C:0506H         LINE#         115
+  -------         ENDPROC       LEDSCAN
+  -------         PROC          INTERRUPTTIMER0
+  C:0507H         LINE#         117
+  C:0512H         LINE#         118
+  C:0515H         LINE#         119
+  C:0518H         LINE#         120
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 6
+
+
+  C:051BH         LINE#         121
+  -------         ENDPROC       INTERRUPTTIMER0
+  -------         PROC          _CONFIGTIMER1
+  D:0007H         SYMBOL        ms
+  -------         DO            
+  D:0008H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0346H         LINE#         123
+  C:0346H         LINE#         125
+  C:035BH         LINE#         126
+  C:0371H         LINE#         127
+  C:0386H         LINE#         128
+  C:0394H         LINE#         129
+  C:0397H         LINE#         130
+  C:039AH         LINE#         131
+  C:039DH         LINE#         132
+  C:03A0H         LINE#         133
+  C:03A3H         LINE#         134
+  C:03A5H         LINE#         135
+  C:03A7H         LINE#         136
+  -------         ENDPROC       _CONFIGTIMER1
+  -------         PROC          INTERRUPTTIMER1
+  C:03F4H         LINE#         138
+  C:0411H         LINE#         139
+  C:0414H         LINE#         140
+  C:0417H         LINE#         141
+  C:0420H         LINE#         142
+  C:0423H         LINE#         143
+  C:0425H         LINE#         144
+  -------         ENDPROC       INTERRUPTTIMER1
+  -------         PROC          _DELAY10US
+  D:0007H         SYMBOL        t
+  C:000EH         LINE#         149
+  C:000EH         LINE#         150
+  C:000EH         LINE#         151
+  C:000FH         LINE#         152
+  C:0010H         LINE#         153
+  C:0011H         LINE#         154
+  C:0012H         LINE#         155
+  C:0013H         LINE#         156
+  C:0014H         LINE#         157
+  C:0015H         LINE#         158
+  C:0016H         LINE#         159
+  C:0018H         LINE#         160
+  -------         ENDPROC       _DELAY10US
+  -------         PROC          GET18B20ACK
+  -------         DO            
+  B:0020H.3       SYMBOL        ack
+  -------         ENDDO         
+  C:0524H         LINE#         162
+  C:0524H         LINE#         164
+  C:0526H         LINE#         165
+  C:0528H         LINE#         166
+  C:052DH         LINE#         167
+  C:052FH         LINE#         168
+  C:0534H         LINE#         169
+  C:0538H         LINE#         170
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 7
+
+
+  C:053BH         LINE#         171
+  C:053DH         LINE#         172
+  C:053FH         LINE#         173
+  -------         ENDPROC       GET18B20ACK
+  -------         PROC          _WRITE18B20
+  D:0006H         SYMBOL        dat
+  -------         DO            
+  D:0005H         SYMBOL        mask
+  -------         ENDDO         
+  C:0498H         LINE#         175
+  C:049AH         LINE#         177
+  C:049CH         LINE#         178
+  C:04A1H         LINE#         179
+  C:04A3H         LINE#         180
+  C:04A4H         LINE#         181
+  C:04A5H         LINE#         182
+  C:04A8H         LINE#         183
+  C:04AAH         LINE#         184
+  C:04ACH         LINE#         185
+  C:04AEH         LINE#         186
+  C:04AEH         LINE#         187
+  C:04B3H         LINE#         188
+  C:04B5H         LINE#         189
+  C:04BBH         LINE#         190
+  C:04BDH         LINE#         191
+  -------         ENDPROC       _WRITE18B20
+  -------         PROC          READ18B20
+  -------         DO            
+  D:0006H         SYMBOL        dat
+  D:0005H         SYMBOL        mask
+  -------         ENDDO         
+  C:046EH         LINE#         193
+  C:046EH         LINE#         197
+  C:0470H         LINE#         198
+  C:0475H         LINE#         199
+  C:0477H         LINE#         200
+  C:0478H         LINE#         201
+  C:0479H         LINE#         202
+  C:047BH         LINE#         203
+  C:047CH         LINE#         204
+  C:047DH         LINE#         205
+  C:0480H         LINE#         206
+  C:0483H         LINE#         207
+  C:0485H         LINE#         208
+  C:0488H         LINE#         209
+  C:0488H         LINE#         210
+  C:048DH         LINE#         211
+  C:0493H         LINE#         212
+  C:0495H         LINE#         213
+  C:0497H         LINE#         214
+  -------         ENDPROC       READ18B20
+  -------         PROC          START18B20
+  -------         DO            
+  B:0020H.2       SYMBOL        ack
+  -------         ENDDO         
+  C:0540H         LINE#         216
+  C:0540H         LINE#         218
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 8
+
+
+  C:0545H         LINE#         219
+  C:0548H         LINE#         220
+  C:054DH         LINE#         221
+  C:0552H         LINE#         222
+  C:0552H         LINE#         223
+  C:0555H         LINE#         224
+  -------         ENDPROC       START18B20
+  -------         PROC          _GET18B20TEMP
+  D:0001H         SYMBOL        temp
+  -------         DO            
+  B:0020H.2       SYMBOL        ack
+  D:0004H         SYMBOL        LSB
+  D:0007H         SYMBOL        MSB
+  -------         ENDDO         
+  C:0440H         LINE#         225
+  C:0440H         LINE#         228
+  C:0445H         LINE#         230
+  C:0448H         LINE#         231
+  C:044DH         LINE#         232
+  C:0452H         LINE#         233
+  C:0457H         LINE#         234
+  C:045AH         LINE#         235
+  C:046AH         LINE#         236
+  C:046AH         LINE#         237
+  C:046DH         LINE#         238
+  -------         ENDPROC       _GET18B20TEMP
+  -------         ENDMOD        18B20
+
+  -------         MODULE        ?C?CSTOPTR
+  C:014EH         PUBLIC        ?C?CSTOPTR
+  -------         ENDMOD        ?C?CSTOPTR
+
+  -------         MODULE        ?C?IMUL
+  C:0170H         PUBLIC        ?C?IMUL
+  -------         ENDMOD        ?C?IMUL
+
+  -------         MODULE        ?C?UIDIV
+  C:0182H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+  -------         MODULE        ?C?ISTPTR
+  C:01D7H         PUBLIC        ?C?ISTPTR
+  -------         ENDMOD        ?C?ISTPTR
+
+  -------         MODULE        ?C?LMUL
+  C:01F6H         PUBLIC        ?C?LMUL
+  -------         ENDMOD        ?C?LMUL
+
+  -------         MODULE        ?C?ULSHR
+  C:0245H         PUBLIC        ?C?ULSHR
+  -------         ENDMOD        ?C?ULSHR
+
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?GET18B20ACK?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:15:08  PAGE 9
+
+
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?START18B20?18B20
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?INTERRUPTTIMER1?18B20
+
+Program Size: data=38.5 xdata=0 code=1374
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)
