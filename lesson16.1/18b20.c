@@ -2,6 +2,8 @@
 #include <intrins.h>
 
 sbit IO_18B20=P3^7;
+sbit TURN=P2^0;
+
 unsigned char code LedCharYin[] = {
 	0x3f, 0x06, 0x5b, 0x4f,
   	0x66, 0x6d, 0x7d, 0x07,
@@ -85,6 +87,9 @@ void convert(unsigned char *out){
 
 	if(sig==0){out[i]=17;}
 	else{out[i]=16;}
+
+	if(intT>=25){TURN=0;}
+	else{TURN=1;}
 }
 
 
