@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        06/01/2019  11:47:32  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        06/02/2019  04:14:02  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  18b20 (?C_STARTUP)
             CODE    0530H     001CH     UNIT         ?PR?GET18B20ACK?18B20
             CODE    054CH     0016H     UNIT         ?PR?START18B20?18B20
             CODE    0562H     0012H     UNIT         ?CO?18B20
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 2
 
 
 
@@ -119,7 +119,7 @@ SEGMENT                              BIT_GROUP          DATA_GROUP
 
 
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 3
 
 
 SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
@@ -179,7 +179,7 @@ SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
   C:0352H         PUBLIC        _ConfigTimer1
   D:00B8H         PUBLIC        IP
   B:0020H.4       PUBLIC        flag
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 4
 
 
   D:0024H         PUBLIC        LedBuff
@@ -239,199 +239,199 @@ SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
   -------         ENDPROC       MAIN
   -------         PROC          _CONVERT
   D:0008H         SYMBOL        out
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 5
 
 
   -------         DO            
   D:000BH         SYMBOL        i
   B:0020H.0       SYMBOL        sig
   -------         ENDDO         
-  C:001EH         LINE#         72
-  C:0024H         LINE#         73
-  C:0027H         LINE#         75
-  C:0038H         LINE#         76
-  C:004AH         LINE#         77
-  C:0053H         LINE#         79
-  C:006DH         LINE#         80
-  C:008CH         LINE#         81
-  C:00B3H         LINE#         82
-  C:00DAH         LINE#         83
-  C:0101H         LINE#         85
-  C:0116H         LINE#         86
-  C:012FH         LINE#         88
-  C:0142H         LINE#         89
-  C:014DH         LINE#         91
-  C:0157H         LINE#         92
-  C:0159H         LINE#         93
+  C:001EH         LINE#         73
+  C:0024H         LINE#         74
+  C:0027H         LINE#         76
+  C:0038H         LINE#         77
+  C:004AH         LINE#         78
+  C:0053H         LINE#         80
+  C:006DH         LINE#         81
+  C:008CH         LINE#         82
+  C:00B3H         LINE#         83
+  C:00DAH         LINE#         84
+  C:0101H         LINE#         86
+  C:0116H         LINE#         87
+  C:012FH         LINE#         89
+  C:0142H         LINE#         90
+  C:014DH         LINE#         92
+  C:0157H         LINE#         93
+  C:0159H         LINE#         94
   -------         ENDPROC       _CONVERT
   -------         PROC          _CONFIGTIMER0
   D:0007H         SYMBOL        ms
   -------         DO            
   D:0008H         SYMBOL        tmp
   -------         ENDDO         
-  C:02F0H         LINE#         96
-  C:02F0H         LINE#         98
-  C:0305H         LINE#         99
-  C:031BH         LINE#         100
-  C:0330H         LINE#         101
-  C:033EH         LINE#         102
-  C:0341H         LINE#         103
-  C:0344H         LINE#         104
-  C:0347H         LINE#         105
-  C:034AH         LINE#         106
-  C:034DH         LINE#         107
-  C:034FH         LINE#         108
-  C:0351H         LINE#         109
+  C:02F0H         LINE#         97
+  C:02F0H         LINE#         99
+  C:0305H         LINE#         100
+  C:031BH         LINE#         101
+  C:0330H         LINE#         102
+  C:033EH         LINE#         103
+  C:0341H         LINE#         104
+  C:0344H         LINE#         105
+  C:0347H         LINE#         106
+  C:034AH         LINE#         107
+  C:034DH         LINE#         108
+  C:034FH         LINE#         109
+  C:0351H         LINE#         110
   -------         ENDPROC       _CONFIGTIMER0
   -------         PROC          LEDSCAN
   -------         DO            
   D:0021H         SYMBOL        i
   -------         ENDDO         
-  C:04EFH         LINE#         110
-  C:04EFH         LINE#         112
-  C:04F2H         LINE#         113
-  C:04FDH         LINE#         114
-  C:0505H         LINE#         115
-  C:050CH         LINE#         116
-  C:050EH         LINE#         117
-  C:050FH         LINE#         118
-  C:0512H         LINE#         119
+  C:04EFH         LINE#         111
+  C:04EFH         LINE#         113
+  C:04F2H         LINE#         114
+  C:04FDH         LINE#         115
+  C:0505H         LINE#         116
+  C:050CH         LINE#         117
+  C:050EH         LINE#         118
+  C:050FH         LINE#         119
   C:0512H         LINE#         120
+  C:0512H         LINE#         121
   -------         ENDPROC       LEDSCAN
   -------         PROC          INTERRUPTTIMER0
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 6
 
 
-  C:0513H         LINE#         122
-  C:051EH         LINE#         123
-  C:0521H         LINE#         124
-  C:0524H         LINE#         125
-  C:0527H         LINE#         126
+  C:0513H         LINE#         123
+  C:051EH         LINE#         124
+  C:0521H         LINE#         125
+  C:0524H         LINE#         126
+  C:0527H         LINE#         127
   -------         ENDPROC       INTERRUPTTIMER0
   -------         PROC          _CONFIGTIMER1
   D:0007H         SYMBOL        ms
   -------         DO            
   D:0008H         SYMBOL        tmp
   -------         ENDDO         
-  C:0352H         LINE#         128
-  C:0352H         LINE#         130
-  C:0367H         LINE#         131
-  C:037DH         LINE#         132
-  C:0392H         LINE#         133
-  C:03A0H         LINE#         134
-  C:03A3H         LINE#         135
-  C:03A6H         LINE#         136
-  C:03A9H         LINE#         137
-  C:03ACH         LINE#         138
-  C:03AFH         LINE#         139
-  C:03B1H         LINE#         140
-  C:03B3H         LINE#         141
+  C:0352H         LINE#         129
+  C:0352H         LINE#         131
+  C:0367H         LINE#         132
+  C:037DH         LINE#         133
+  C:0392H         LINE#         134
+  C:03A0H         LINE#         135
+  C:03A3H         LINE#         136
+  C:03A6H         LINE#         137
+  C:03A9H         LINE#         138
+  C:03ACH         LINE#         139
+  C:03AFH         LINE#         140
+  C:03B1H         LINE#         141
+  C:03B3H         LINE#         142
   -------         ENDPROC       _CONFIGTIMER1
   -------         PROC          INTERRUPTTIMER1
-  C:0400H         LINE#         143
-  C:041DH         LINE#         144
-  C:0420H         LINE#         145
-  C:0423H         LINE#         146
-  C:042CH         LINE#         147
-  C:042FH         LINE#         148
-  C:0431H         LINE#         149
+  C:0400H         LINE#         144
+  C:041DH         LINE#         145
+  C:0420H         LINE#         146
+  C:0423H         LINE#         147
+  C:042CH         LINE#         148
+  C:042FH         LINE#         149
+  C:0431H         LINE#         150
   -------         ENDPROC       INTERRUPTTIMER1
   -------         PROC          _DELAY10US
   D:0007H         SYMBOL        t
-  C:000EH         LINE#         154
   C:000EH         LINE#         155
   C:000EH         LINE#         156
-  C:000FH         LINE#         157
-  C:0010H         LINE#         158
-  C:0011H         LINE#         159
-  C:0012H         LINE#         160
-  C:0013H         LINE#         161
-  C:0014H         LINE#         162
-  C:0015H         LINE#         163
-  C:0016H         LINE#         164
-  C:0018H         LINE#         165
+  C:000EH         LINE#         157
+  C:000FH         LINE#         158
+  C:0010H         LINE#         159
+  C:0011H         LINE#         160
+  C:0012H         LINE#         161
+  C:0013H         LINE#         162
+  C:0014H         LINE#         163
+  C:0015H         LINE#         164
+  C:0016H         LINE#         165
+  C:0018H         LINE#         166
   -------         ENDPROC       _DELAY10US
   -------         PROC          GET18B20ACK
   -------         DO            
   B:0020H.3       SYMBOL        ack
   -------         ENDDO         
-  C:0530H         LINE#         167
-  C:0530H         LINE#         169
-  C:0532H         LINE#         170
-  C:0534H         LINE#         171
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 7
+  C:0530H         LINE#         168
+  C:0530H         LINE#         170
+  C:0532H         LINE#         171
+  C:0534H         LINE#         172
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 7
 
 
-  C:0539H         LINE#         172
-  C:053BH         LINE#         173
-  C:0540H         LINE#         174
-  C:0544H         LINE#         175
-  C:0547H         LINE#         176
-  C:0549H         LINE#         177
-  C:054BH         LINE#         178
+  C:0539H         LINE#         173
+  C:053BH         LINE#         174
+  C:0540H         LINE#         175
+  C:0544H         LINE#         176
+  C:0547H         LINE#         177
+  C:0549H         LINE#         178
+  C:054BH         LINE#         179
   -------         ENDPROC       GET18B20ACK
   -------         PROC          _WRITE18B20
   D:0006H         SYMBOL        dat
   -------         DO            
   D:0005H         SYMBOL        mask
   -------         ENDDO         
-  C:04A4H         LINE#         180
-  C:04A6H         LINE#         182
-  C:04A8H         LINE#         183
-  C:04ADH         LINE#         184
-  C:04AFH         LINE#         185
-  C:04B0H         LINE#         186
-  C:04B1H         LINE#         187
-  C:04B4H         LINE#         188
-  C:04B6H         LINE#         189
-  C:04B8H         LINE#         190
-  C:04BAH         LINE#         191
+  C:04A4H         LINE#         181
+  C:04A6H         LINE#         183
+  C:04A8H         LINE#         184
+  C:04ADH         LINE#         185
+  C:04AFH         LINE#         186
+  C:04B0H         LINE#         187
+  C:04B1H         LINE#         188
+  C:04B4H         LINE#         189
+  C:04B6H         LINE#         190
+  C:04B8H         LINE#         191
   C:04BAH         LINE#         192
-  C:04BFH         LINE#         193
-  C:04C1H         LINE#         194
-  C:04C7H         LINE#         195
-  C:04C9H         LINE#         196
+  C:04BAH         LINE#         193
+  C:04BFH         LINE#         194
+  C:04C1H         LINE#         195
+  C:04C7H         LINE#         196
+  C:04C9H         LINE#         197
   -------         ENDPROC       _WRITE18B20
   -------         PROC          READ18B20
   -------         DO            
   D:0006H         SYMBOL        dat
   D:0005H         SYMBOL        mask
   -------         ENDDO         
-  C:047AH         LINE#         198
-  C:047AH         LINE#         202
-  C:047CH         LINE#         203
-  C:0481H         LINE#         204
-  C:0483H         LINE#         205
-  C:0484H         LINE#         206
-  C:0485H         LINE#         207
-  C:0487H         LINE#         208
-  C:0488H         LINE#         209
-  C:0489H         LINE#         210
-  C:048CH         LINE#         211
-  C:048FH         LINE#         212
-  C:0491H         LINE#         213
-  C:0494H         LINE#         214
+  C:047AH         LINE#         199
+  C:047AH         LINE#         203
+  C:047CH         LINE#         204
+  C:0481H         LINE#         205
+  C:0483H         LINE#         206
+  C:0484H         LINE#         207
+  C:0485H         LINE#         208
+  C:0487H         LINE#         209
+  C:0488H         LINE#         210
+  C:0489H         LINE#         211
+  C:048CH         LINE#         212
+  C:048FH         LINE#         213
+  C:0491H         LINE#         214
   C:0494H         LINE#         215
-  C:0499H         LINE#         216
-  C:049FH         LINE#         217
-  C:04A1H         LINE#         218
-  C:04A3H         LINE#         219
+  C:0494H         LINE#         216
+  C:0499H         LINE#         217
+  C:049FH         LINE#         218
+  C:04A1H         LINE#         219
+  C:04A3H         LINE#         220
   -------         ENDPROC       READ18B20
   -------         PROC          START18B20
   -------         DO            
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 8
 
 
   B:0020H.2       SYMBOL        ack
   -------         ENDDO         
-  C:054CH         LINE#         221
-  C:054CH         LINE#         223
-  C:0551H         LINE#         224
-  C:0554H         LINE#         225
-  C:0559H         LINE#         226
-  C:055EH         LINE#         227
+  C:054CH         LINE#         222
+  C:054CH         LINE#         224
+  C:0551H         LINE#         225
+  C:0554H         LINE#         226
+  C:0559H         LINE#         227
   C:055EH         LINE#         228
-  C:0561H         LINE#         229
+  C:055EH         LINE#         229
+  C:0561H         LINE#         230
   -------         ENDPROC       START18B20
   -------         PROC          _GET18B20TEMP
   D:0001H         SYMBOL        temp
@@ -440,17 +440,17 @@ SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
   D:0004H         SYMBOL        LSB
   D:0007H         SYMBOL        MSB
   -------         ENDDO         
-  C:044CH         LINE#         230
-  C:044CH         LINE#         233
-  C:0451H         LINE#         235
-  C:0454H         LINE#         236
-  C:0459H         LINE#         237
-  C:045EH         LINE#         238
-  C:0463H         LINE#         239
-  C:0466H         LINE#         240
-  C:0476H         LINE#         241
+  C:044CH         LINE#         231
+  C:044CH         LINE#         234
+  C:0451H         LINE#         236
+  C:0454H         LINE#         237
+  C:0459H         LINE#         238
+  C:045EH         LINE#         239
+  C:0463H         LINE#         240
+  C:0466H         LINE#         241
   C:0476H         LINE#         242
-  C:0479H         LINE#         243
+  C:0476H         LINE#         243
+  C:0479H         LINE#         244
   -------         ENDPROC       _GET18B20TEMP
   -------         ENDMOD        18B20
 
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  18b20 (?C_STARTUP)
   -------         ENDMOD        ?C?ULSHR
 
 *** WARNING L15: MULTIPLE CALL TO SEGMENT
-BL51 BANKED LINKER/LOCATER V6.22                                                      06/01/2019  11:47:32  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/02/2019  04:14:02  PAGE 9
 
 
     SEGMENT: ?PR?GET18B20ACK?18B20

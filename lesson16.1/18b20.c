@@ -67,6 +67,7 @@ int main(void){
 			LedBuff[0]=LedCharYin[out[0]];
 		}
    }
+   return 0;
 }
 
 void convert(unsigned char *out){

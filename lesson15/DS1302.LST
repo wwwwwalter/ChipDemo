@@ -1,0 +1,207 @@
+C51 COMPILER V9.02   DS1302                                                                06/02/2019 09:30:35 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN DS1302.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51\C51\BIN\C51.EXE DS1302.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          unsigned char code LedCharYin[] = {
+   3                  0x3f, 0x06, 0x5b, 0x4f,
+   4                  0x66, 0x6d, 0x7d, 0x07,
+   5                  0x7f, 0x6f, 0x77, 0x7c,
+   6                  0x39, 0x5e, 0x79, 0x71
+   7          };
+   8          
+   9          unsigned char LedBuff[8] = {
+  10                  0x00,0x00,0x00,0x00,
+  11                  0x00,0x00,0x00,0x00
+  12          };
+  13          //interrupt
+  14          bit flag200ms=0;
+  15          unsigned char T0RH=0;
+  16          unsigned char T0RL=0;
+  17          void ConfigTimer0(unsigned int ms);
+  18          //DS1302
+  19          sbit CE=P3^5;
+  20          sbit CLK=P3^6;
+  21          sbit IO=P3^7;
+  22          
+  23          void InitDS1302();
+  24          void DS1302ByteWrite(unsigned char dat);
+  25          unsigned char DS1302ByteRead();
+  26          unsigned char DS1302SingleRead(unsigned char reg);
+  27          void DS1302SingleWrite(unsigned char reg,unsigned char dat);
+  28          //Lcd
+  29          extern void InitLcd1602();
+  30          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
+  31          
+  32          
+  33          void main(void){
+  34   1              unsigned char i;
+  35   1              unsigned char psec=0xAA;//1 010 1010
+  36   1              unsigned char time[8];
+  37   1              //unsigned char str[12];
+  38   1      
+  39   1              EA=1;
+  40   1              ConfigTimer0(1);
+  41   1              InitDS1302();
+  42   1              //InitLcd1602();
+  43   1      
+  44   1              while(1){
+  45   2                      if(flag200ms){
+  46   3                              flag200ms=0;
+  47   3                              for(i=0;i<7;++i){
+  48   4                                      time[i]=DS1302SingleRead(i);
+  49   4                              }
+  50   3                              if(psec!=time[0]){
+  51   4      
+  52   4                                      LedBuff[0]=LedCharYin[time[0]&0x0f];
+  53   4                                      LedBuff[1]=LedCharYin[time[0]>>4&0x07];                 
+  54   4      
+  55   4                                      LedBuff[2]=LedCharYin[time[1]&0x0f];
+C51 COMPILER V9.02   DS1302                                                                06/02/2019 09:30:35 PAGE 2   
+
+  56   4                                      LedBuff[2]|=0x80;
+  57   4                                      LedBuff[3]=LedCharYin[time[1]>>4&0x07];
+  58   4      
+  59   4                                      LedBuff[4]=LedCharYin[time[2]&0x0f];
+  60   4                                      LedBuff[4]|=0x80;
+  61   4                                      LedBuff[5]=LedCharYin[time[2]>>4&0x03];
+  62   4      
+  63   4                                      LedBuff[6]=LedCharYin[time[3]&0x0f];
+  64   4                                      LedBuff[6]|=0x80;
+  65   4                                      LedBuff[7]=LedCharYin[time[3]>>4&0x03];
+  66   4      
+  67   4      
+  68   4                                      psec=time[0];   
+  69   4                              }
+  70   3                      }
+  71   2              }       
+  72   1      }
+  73          
+  74          void ConfigTimer0(unsigned int ms){
+  75   1              unsigned long tmp;
+  76   1              tmp=12000000/12/1000*ms;
+  77   1              tmp=65536-tmp;
+  78   1              tmp+=12;
+  79   1              T0RH=(unsigned char)(tmp>>8);
+  80   1              T0RL=(unsigned char)tmp;
+  81   1              TMOD&=0xf0;
+  82   1              TMOD|=0x01;
+  83   1              TH0=T0RH;
+  84   1              TL0=T0RL;
+  85   1              ET0=1;
+  86   1              TR0=1;
+  87   1      }
+  88          
+  89          void LedScan(){
+  90   1              static unsigned char i=0;
+  91   1              P0=0x00;
+  92   1              P1=(P1&0xF8)|~i;
+  93   1              P0=LedBuff[i];
+  94   1              if(i<sizeof(LedBuff)-1){
+  95   2                      i++;
+  96   2              }else{
+  97   2                      i=0;
+  98   2              }
+  99   1      }
+ 100          
+ 101          void InterruptTimer0() interrupt 1{
+ 102   1              static unsigned char i=0;
+ 103   1              TH0=T0RH;
+ 104   1              TL0=T0RL;
+ 105   1              LedScan();
+ 106   1              i++;
+ 107   1              if(i>=200){
+ 108   2                      i=0;
+ 109   2                      flag200ms=1;
+ 110   2              }
+ 111   1      }
+ 112          
+ 113          void InitDS1302(){
+ 114   1              unsigned char i;
+ 115   1              unsigned char code InitTime[]={
+ 116   1                      0x00,0x30,0x09,0x02,0x06,0x07,0x19      
+ 117   1              };
+C51 COMPILER V9.02   DS1302                                                                06/02/2019 09:30:35 PAGE 3   
+
+ 118   1              CE=0;
+ 119   1              CLK=0;
+ 120   1              i=DS1302SingleRead(0);
+ 121   1              if((i&0x80)!=0){
+ 122   2                      DS1302SingleWrite(7,0x00);
+ 123   2                      for(i=0;i<7;++i){
+ 124   3                              DS1302SingleWrite(i,InitTime[i]);
+ 125   3                      }
+ 126   2              }
+ 127   1              /*
+ 128   1              else{
+ 129   1                 DS1302SingleWrite(7,0x00);
+ 130   1                      for(i=0;i<7;++i){
+ 131   1                              DS1302SingleWrite(i,InitTime[i]);
+ 132   1                      }
+ 133   1              }
+ 134   1              */
+ 135   1              
+ 136   1      }
+ 137          
+ 138          void DS1302ByteWrite(unsigned char dat){
+ 139   1              unsigned char mask;
+ 140   1              for(mask=0x01;mask!=0;mask<<=1){
+ 141   2                      if((mask&dat)!=0){
+ 142   3                              IO=1;
+ 143   3                      }else{
+ 144   3                              IO=0;
+ 145   3                      }
+ 146   2                      CLK=1;
+ 147   2                      CLK=0;
+ 148   2              }
+ 149   1              IO=1;
+ 150   1      }
+ 151          
+ 152          unsigned char DS1302ByteRead(){
+ 153   1              unsigned char mask;
+ 154   1              unsigned char dat=0;
+ 155   1              for(mask=0x01;mask!=0;mask<<=1){
+ 156   2                      if(IO!=0){
+ 157   3                              dat|=mask;
+ 158   3                      }
+ 159   2                      CLK=1;
+ 160   2                      CLK=0;
+ 161   2              }
+ 162   1              return dat;
+ 163   1      }
+ 164          
+ 165          unsigned char DS1302SingleRead(unsigned char reg){
+ 166   1         unsigned char dat;
+ 167   1         CE=1;
+ 168   1         DS1302ByteWrite((reg<<1)|0x81);
+ 169   1         dat=DS1302ByteRead();
+ 170   1         CE=0;
+ 171   1         return dat;
+ 172   1      }
+ 173          void DS1302SingleWrite(unsigned char reg,unsigned char dat){
+ 174   1              CE=1;
+ 175   1              DS1302ByteWrite((reg<<1)|0x80);
+ 176   1              DS1302ByteWrite(dat);
+ 177   1              CE=0;
+ 178   1      }       
+
+C51 COMPILER V9.02   DS1302                                                                06/02/2019 09:30:35 PAGE 4   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    491    ----
+   CONSTANT SIZE    =     23    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
