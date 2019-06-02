@@ -25,13 +25,15 @@ void DS1302ByteWrite(unsigned char dat);
 unsigned char DS1302ByteRead();
 unsigned char DS1302SingleRead(unsigned char reg);
 void DS1302SingleWrite(unsigned char reg,unsigned char dat);
+void DS1302BurstRead(unsigned char *dat);
+void DS1302BurstWrite(unsigned char *dat);
 //Lcd
 extern void InitLcd1602();
 extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
 
 
 void main(void){
-	unsigned char i;
+	
 	unsigned char psec=0xAA;//1 010 1010
 	unsigned char time[8];
 	//unsigned char str[12];
@@ -44,9 +46,7 @@ void main(void){
 	while(1){
 		if(flag200ms){
 			flag200ms=0;
-			for(i=0;i<7;++i){
-			 	time[i]=DS1302SingleRead(i);
-			}
+			DS1302BurstRead(time);
 			if(psec!=time[0]){
 
 				LedBuff[0]=LedCharYin[time[0]&0x0f];
@@ -113,16 +113,15 @@ void InterruptTimer0() interrupt 1{
 void InitDS1302(){
  	unsigned char i;
 	unsigned char code InitTime[]={
-		0x00,0x30,0x09,0x02,0x06,0x07,0x19	
+		0x00,0x30,0x09,0x02,0x06,0x07,0x19,
+		0x00	
 	};
 	CE=0;
 	CLK=0;
 	i=DS1302SingleRead(0);
 	if((i&0x80)!=0){
 		DS1302SingleWrite(7,0x00);
-		for(i=0;i<7;++i){
-		 	DS1302SingleWrite(i,InitTime[i]);
-		}
+		DS1302BurstWrite(InitTime);
 	}
 	/*
 	else{
@@ -131,8 +130,7 @@ void InitDS1302(){
 		 	DS1302SingleWrite(i,InitTime[i]);
 		}
 	}
-	*/
-	
+	*/	
 }
 
 void DS1302ByteWrite(unsigned char dat){
@@ -175,4 +173,26 @@ void DS1302SingleWrite(unsigned char reg,unsigned char dat){
 	DS1302ByteWrite((reg<<1)|0x80);
 	DS1302ByteWrite(dat);
 	CE=0;
-}	
+}
+
+void DS1302BurstWrite(unsigned char *dat){
+	unsigned char i;
+	CE=1;
+	DS1302ByteWrite(0xBE);
+	for(i=0;i<8;++i){
+	 	DS1302ByteWrite(dat[i]);
+	}
+	CE=0;
+}
+
+void DS1302BurstRead(unsigned char *dat){
+ 	unsigned char i;
+	CE=1;
+	DS1302ByteWrite(0xBF);
+	for(i=0;i<8;++i){
+	 	dat[i]=DS1302ByteRead();
+	}
+	CE=0;
+}
+
+	
