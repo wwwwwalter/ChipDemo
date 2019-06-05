@@ -1,0 +1,77 @@
+C51 COMPILER V9.60.0.0   LED                                                               06/05/2019 11:51:31 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN led.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE led.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          sbit ADDA=P1^0;
+   4          sbit ADDB=P1^1;
+   5          sbit ADDC=P1^2;
+   6          
+   7          unsigned char code LedCharYin[] = {
+   8                  0x3f, 0x06, 0x5b, 0x4f,
+   9                  0x66, 0x6d, 0x7d, 0x07,
+  10                  0x7f, 0x6f, 0x77, 0x7c,
+  11                  0x39, 0x5e, 0x79, 0x71
+  12          };
+  13          unsigned char code LedCharYang[] = {
+  14                  0xC0, 0xF9, 0xA4, 0xB0, 
+  15                  0x99, 0x92, 0x82, 0xF8,
+  16                  0x80, 0x90, 0x88, 0x83, 
+  17                  0xC6, 0xA1, 0x86, 0x8E
+  18          };
+  19          
+  20          unsigned char LedBuff[8] = {
+  21                  0x00,0x00,0x00,0x00,
+  22                  0x00,0x00,0x00,0x00
+  23          };
+  24          
+  25          void LedScan(){
+  26   1              static unsigned char i=0;
+  27   1              P0=0x00;        
+  28   1              switch(i){
+  29   2                      case 0:ADDC=1;ADDB=1;ADDA=1;break;
+  30   2                      case 1:ADDC=1;ADDB=1;ADDA=0;break;
+  31   2                      case 2:ADDC=1;ADDB=0;ADDA=1;break;
+  32   2                      case 3:ADDC=1;ADDB=0;ADDA=0;break;
+  33   2                      case 4:ADDC=0;ADDB=1;ADDA=1;break;
+  34   2                      case 5:ADDC=0;ADDB=1;ADDA=0;break;
+  35   2                      case 6:ADDC=0;ADDB=0;ADDA=1;break;
+  36   2                      case 7:ADDC=0;ADDB=0;ADDA=0;break;
+  37   2                      default:break;
+  38   2              }
+  39   1              P0=LedBuff[i];  
+  40   1              if(i<sizeof(LedBuff)-1){
+  41   2                      i++;
+  42   2              }else{
+  43   2                      i=0;
+  44   2              }
+  45   1      }
+  46          
+  47          void LedLoad(unsigned char index,unsigned char dat){
+  48   1              LedBuff[index]=LedCharYin[dat]; 
+  49   1              if(index%2==0){
+  50   2                      LedBuff[index]|=0x80;
+  51   2              }
+  52   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.60.0.0   LED                                                               06/05/2019 11:51:31 PAGE 2   
+
+   CODE SIZE        =    139    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

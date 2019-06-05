@@ -1,0 +1,8 @@
+"STARTUP.obj",
+"DS1302.obj",
+"led.obj",
+"main.obj",
+"key.obj",
+"uart.obj" 
+TO "time" 
+RAMSIZE(256) 

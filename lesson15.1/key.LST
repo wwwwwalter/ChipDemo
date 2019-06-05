@@ -1,0 +1,112 @@
+C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 11:51:31 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN key.OBJ
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE key.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          //in//默认高电平
+   4          sbit Col0 = P2^4;
+   5          sbit Col1 = P2^5;
+   6          sbit Col2 = P2^6;
+   7          sbit Col3 = P2^7;
+   8          //out//轮流低电平
+   9          sbit Row0 = P2^0;
+  10          sbit Row1 = P2^1;
+  11          sbit Row2 = P2^2;
+  12          sbit Row3 = P2^3;
+  13          
+  14          unsigned char KeySta[4][4] = {
+  15                  {1,1,1,1},
+  16                  {1,1,1,1},
+  17                  {1,1,1,1},
+  18                  {1,1,1,1}
+  19          };
+  20          
+  21          unsigned char code KeyCodeMap[4][4]={
+  22                  {0x31, 0x32, 0x33, 0x26},//数字键 1、数字键 2、数字键 3、 向上键
+  23                  {0x34, 0x35, 0x36, 0x28},//数字键 4、数字键 5、数字键 6、 向下键
+  24                  {0x37, 0x38, 0x39, 0x25},//数字键 7、数字键 8、数字键 9、 向左键
+  25                  {0x30, 0x1B, 0x0D, 0x27} //数字键 0、ESC键、 回车键、    向右键
+  26          };
+  27          
+  28          
+  29          extern void KeyAction(unsigned char keycode);
+  30          
+  31          void KeyGet(){
+  32   1              unsigned char i,j;
+  33   1              static unsigned char backup[4][4]={
+  34   1                      {1,1,1,1},
+  35   1                      {1,1,1,1},
+  36   1                      {1,1,1,1},
+  37   1                      {1,1,1,1}
+  38   1              };
+  39   1              
+  40   1              for(i=0;i<4;++i){
+  41   2                      for(j=0;j<4;++j){
+  42   3                              if(backup[i][j]!=KeySta[i][j]){
+  43   4                                      if(backup[i][j]!=0){                                    
+  44   5                                              KeyAction(KeyCodeMap[i][j]);
+  45   5                                      }
+  46   4                                      backup[i][j]=KeySta[i][j];
+  47   4                              }
+  48   3                      }
+  49   2              }       
+  50   1      }
+  51          
+  52          void KeyScan(){
+  53   1              unsigned char i;
+  54   1              static unsigned char keyout=0;
+  55   1              static unsigned char keybuf[4][4] = {
+C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 11:51:31 PAGE 2   
+
+  56   1                      {0xff,0xff,0xff,0xff},
+  57   1                      {0xff,0xff,0xff,0xff},
+  58   1                      {0xff,0xff,0xff,0xff},
+  59   1                      {0xff,0xff,0xff,0xff}
+  60   1              };
+  61   1              
+  62   1              keybuf[keyout][0]=(keybuf[keyout][0]<<1)|Col0;
+  63   1              keybuf[keyout][1]=(keybuf[keyout][1]<<1)|Col1;
+  64   1              keybuf[keyout][2]=(keybuf[keyout][2]<<1)|Col2;
+  65   1              keybuf[keyout][3]=(keybuf[keyout][3]<<1)|Col3;
+  66   1              
+  67   1              for(i = 0;i<4;++i){
+  68   2                      if((keybuf[keyout][i]&0x0f)==0x00){
+  69   3                              KeySta[keyout][i] = 0;
+  70   3                      }else if((keybuf[keyout][i]&0x0f)==0x0f){
+  71   3                              KeySta[keyout][i] = 1;
+  72   3                      }else{
+  73   3                              ;
+  74   3                      }
+  75   2              }
+  76   1              
+  77   1              switch(keyout){
+  78   2                      case 0:Row0=1;Row1=0;break;
+  79   2                      case 1:Row1=1;Row2=0;break;
+  80   2                      case 2:Row2=1;Row3=0;break;
+  81   2                      case 3:Row3=1;Row0=0;break;
+  82   2                      default:break;
+  83   2              }
+  84   1              
+  85   1              keyout++;
+  86   1              keyout=keyout&0x03;
+  87   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    355    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     49       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

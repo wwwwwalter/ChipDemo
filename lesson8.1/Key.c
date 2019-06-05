@@ -6,7 +6,7 @@ unsigned char code LedCharYin[] = {
   	0x39, 0x5e, 0x79, 0x71
 };
 
- unsigned char code LedCharYang[] = {												  
+unsigned char code LedCharYang[] = {												  
 	0xC0, 0xF9, 0xA4, 0xB0, 
   	0x99, 0x92, 0x82, 0xF8,
 	0x80, 0x90, 0x88, 0x83, 
@@ -74,7 +74,7 @@ void main(void){
 	 	for(i = 0;i<4;++i){
 		 	for(j = 0;j<4;++j){
 			 	if(backup[i][j]!=KeySta[i][j]){
-				 	if(backup!=0){
+				 	if(backup[i][j]!=0){
 					 	P0=LedCharYang[i*4+j];
 					}
 					backup[i][j] = KeySta[i][j];
@@ -115,10 +115,10 @@ void InterruptTimer() interrupt 1{
 
 
 	switch(keyout){
-	 	case 0:	Row0=1;Row1=0;break;
-		case 1: Row1=1;Row2=0;break; 
-		case 2: Row2=1;Row3=0;break;
-		case 3: Row3=1;Row0=0;break;
+	 	case 0:Row0=1;Row1=0;break;
+		case 1:Row1=1;Row2=0;break;
+		case 2:Row2=1;Row3=0;break;
+		case 3:Row3=1;Row0=0;break;
 		default: break;
 	}
 
