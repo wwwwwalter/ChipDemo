@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 14:59:33 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 19:43:42 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -29,169 +29,180 @@ line level    source
   20          extern void ConfigTimer1(unsigned int ms);
   21          extern void uart_send_string(unsigned char *str);
   22          extern void uart_send_hex_string(unsigned char *str,unsigned int len);
-  23          
-  24          void ConfigTimer0(unsigned int ms);
-  25          void ConfigUART(unsigned int baud);
-  26          void LoadTime(Time *time);
-  27          void KeyAction(unsigned char keycode);
-  28          void timeToHexString(Time *time,unsigned char *str);
-  29          
-  30          
-  31          bit flag200ms=1;
-  32          bit flag1s=1;
-  33          unsigned char T0RH=0;
-  34          unsigned char T0RL=0;
-  35          unsigned long code freq=24000000;
-  36          unsigned char settime=0;
-  37          unsigned char uartRecvByte=0;
-  38          unsigned char recvflag=0;
-  39          
-  40          
+  23          extern void InitQueue();
+  24          extern unsigned char DeleteQueue();
+  25          extern unsigned char flagUart;
+  26          
+  27          
+  28          void ConfigTimer0(unsigned int ms);
+  29          void ConfigUART(unsigned int baud);
+  30          void LoadTime(Time *time);
+  31          void KeyAction(unsigned char keycode);
+  32          void timeToHexString(Time *time,unsigned char *str);
+  33          
+  34          
+  35          bit flag200ms=1;
+  36          bit flag1s=1;
+  37          unsigned char T0RH=0;
+  38          unsigned char T0RL=0;
+  39          unsigned long code freq=24000000;
+  40          unsigned char settime=0;
   41          
-  42          void main(){
-  43   1         unsigned char backsec=0xAA;
-  44   1         unsigned char str[9]={'\0'};
-  45   1         Time time = {0};   
-  46   1      
-  47   1         EA=1;
-  48   1         ConfigTimer0(1);
-  49   1         ConfigUART(9600);
-  50   1         InitDS1302();
-  51   1      
-  52   1         while(1){
-  53   2                 KeyGet();       
-  54   2                 if(flag200ms&&(settime==0)){
-  55   3                         flag200ms=0;
-C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 14:59:33 PAGE 2   
+  42          
+  43          
+  44          
+  45          void main(){
+  46   1              Time time = {0};   
+  47   1              unsigned char backsec=0xAA;
+  48   1              unsigned char str[9]={'\0'};
+  49   1              unsigned char command=0;
+  50   1      
+  51   1          EA=1;
+  52   1          InitQueue();
+  53   1              InitDS1302();
+  54   1              ConfigTimer0(1);
+  55   1              ConfigUART(9600);
+C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 19:43:42 PAGE 2   
 
-  56   3                         GetRealTime(&time);             
-  57   3                         if(time.sec!=backsec){
-  58   4                                      LoadTime(&time);                                
-  59   4                                      backsec=time.sec;
-  60   4                         }
-  61   3                 }
-  62   2                 if(flag1s){
-  63   3                         flag1s=0;
-  64   3                         timeToHexString(&time,str);
-  65   3                         uart_send_hex_string(str,8);
-  66   3                 }
-  67   2         }
-  68   1      }
-  69          
-  70          void ConfigTimer0(unsigned int ms){
-  71   1              unsigned long tmp;
-  72   1              tmp=freq/12/1000*ms;
-  73   1              tmp=65536-tmp;
-  74   1              tmp+=12;
-  75   1              T0RH=(unsigned char)(tmp>>8);
-  76   1              T0RL=(unsigned char)tmp;
-  77   1              TMOD&=0xf0;
-  78   1              TMOD|=0x01;
-  79   1              TH0=T0RH;
-  80   1              TL0=T0RL;
-  81   1              ET0=1;
-  82   1              TR0=1;
-  83   1              PT0=1; 
-  84   1      }
-  85          /*
-  86          void ConfigTimer1(unsigned int ms){
-  87                  unsigned long tmp;
-  88                  tmp=freq/12/1000*ms;
-  89                  tmp=65536-tmp;
-  90                  tmp+=12;
-  91                  T1RH=(unsigned char)(tmp>>8);
-  92                  T1RL=(unsigned char)tmp;
-  93                  TMOD&=0x0f;
-  94                  TMOD|=0x10;
-  95                  TH1=T1RH;
-  96                  TL1=T1RL;
-  97                  ET1=1;
-  98                  TR1=1;
-  99          }
- 100          void InterruptTimer1() interrupt 3{     
- 101                  TH1=T1RH;
- 102                  TL1=T1RL;
- 103                  KeyScan();      
- 104          }*/
- 105          
- 106          
- 107          void InterruptTimer0() interrupt 1{
- 108   1              static unsigned char i = 0;     
- 109   1              static unsigned int j = 0;
- 110   1              TH0=T0RH;
- 111   1              TL0=T0RL;       
- 112   1              LedScan();
- 113   1              KeyScan();      
- 114   1              i++;
- 115   1              if(i>=200){
- 116   2                      i=0;
- 117   2                      flag200ms=1;            
-C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 14:59:33 PAGE 3   
+  56   1      
+  57   1      
+  58   1          while(1){
+  59   2                      KeyGet();          
+  60   2                      if(flag200ms&&(settime==0)){
+  61   3                              flag200ms=0;
+  62   3                              GetRealTime(&time);                
+  63   3                              if(time.sec!=backsec){
+  64   4                                      LoadTime(&time);                                
+  65   4                                      backsec=time.sec;
+  66   4                              }
+  67   3                      }
+  68   2                      if(flag1s){
+  69   3                              flag1s=0;
+  70   3                              timeToHexString(&time,str);
+  71   3                              uart_send_hex_string(str,8);
+  72   3                      }
+  73   2                      if(flagUart){
+  74   3                              flagUart=0;
+  75   3                              command=DeleteQueue();                  
+  76   3                              KeyAction(command);
+  77   3                      }               
+  78   2              }
+  79   1      }
+  80          
+  81          void ConfigTimer0(unsigned int ms){
+  82   1              unsigned long tmp;
+  83   1              tmp=freq/12/1000*ms;
+  84   1              tmp=65536-tmp;
+  85   1              tmp+=12;
+  86   1              T0RH=(unsigned char)(tmp>>8);
+  87   1              T0RL=(unsigned char)tmp;
+  88   1              TMOD&=0xf0;
+  89   1              TMOD|=0x01;
+  90   1              TH0=T0RH;
+  91   1              TL0=T0RL;
+  92   1              ET0=1;
+  93   1              TR0=1;
+  94   1              PT0=1; 
+  95   1      }
+  96          /*
+  97          void ConfigTimer1(unsigned int ms){
+  98                  unsigned long tmp;
+  99                  tmp=freq/12/1000*ms;
+ 100                  tmp=65536-tmp;
+ 101                  tmp+=12;
+ 102                  T1RH=(unsigned char)(tmp>>8);
+ 103                  T1RL=(unsigned char)tmp;
+ 104                  TMOD&=0x0f;
+ 105                  TMOD|=0x10;
+ 106                  TH1=T1RH;
+ 107                  TL1=T1RL;
+ 108                  ET1=1;
+ 109                  TR1=1;
+ 110          }
+ 111          void InterruptTimer1() interrupt 3{     
+ 112                  TH1=T1RH;
+ 113                  TL1=T1RL;
+ 114                  KeyScan();      
+ 115          }*/
+ 116          
+ 117          
+C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 19:43:42 PAGE 3   
 
- 118   2              }
- 119   1              j++;
- 120   1              if(j>=1000){
- 121   2                      j=0;
- 122   2                      flag1s=1;
- 123   2              }
- 124   1      }
- 125          
- 126          
- 127          void LoadTime(Time *time){      
- 128   1              LedLoad(2,time->sec&0x0f);
- 129   1              LedLoad(3,time->sec>>4&0x07);
- 130   1              LedLoad(4,time->min&0x0f);
- 131   1              LedLoad(5,time->min>>4&0x07);
- 132   1              LedLoad(6,time->hour&0x0f);
- 133   1              LedLoad(7,time->hour>>4&0x03);
- 134   1      }
- 135          
- 136          void timeToHexString(Time *time,unsigned char *str){
- 137   1              str[0]=time->year>>8;
- 138   1              str[1]=time->year&0xff;
- 139   1              str[2]=time->mon;
- 140   1              str[3]=time->day;
- 141   1              str[4]=time->hour;
- 142   1              str[5]=time->min;
- 143   1              str[6]=time->sec;
- 144   1              str[7]=time->week;      
+ 118          void InterruptTimer0() interrupt 1{
+ 119   1              static unsigned char i = 0;     
+ 120   1              static unsigned int j = 0;
+ 121   1              TH0=T0RH;
+ 122   1              TL0=T0RL;       
+ 123   1              LedScan();
+ 124   1              KeyScan();      
+ 125   1              i++;
+ 126   1              if(i>=200){
+ 127   2                      i=0;
+ 128   2                      flag200ms=1;            
+ 129   2              }
+ 130   1              j++;
+ 131   1              if(j>=1000){
+ 132   2                      j=0;
+ 133   2                      flag1s=1;
+ 134   2              }
+ 135   1      }
+ 136          
+ 137          
+ 138          void LoadTime(Time *time){      
+ 139   1              LedLoad(2,time->sec&0x0f);
+ 140   1              LedLoad(3,time->sec>>4&0x07);
+ 141   1              LedLoad(4,time->min&0x0f);
+ 142   1              LedLoad(5,time->min>>4&0x07);
+ 143   1              LedLoad(6,time->hour&0x0f);
+ 144   1              LedLoad(7,time->hour>>4&0x03);
  145   1      }
  146          
- 147          void KeyAction(unsigned char keycode){
- 148   1              if((keycode>='0')&&(keycode<='9')){             
- 149   2                      LedLoad(0,0);           
- 150   2                      uart_send_string("hello world:123456789");
- 151   2              }else if(keycode==0x26){
- 152   2                      LedLoad(0,1);
- 153   2              }else if(keycode==0x28){
- 154   2                      LedLoad(0,2);
- 155   2              }else if(keycode==0x25){
- 156   2                      LedLoad(0,3);
- 157   2              }else if(keycode==0x27){
- 158   2                      LedLoad(0,4);
- 159   2              }else if(keycode==0x0d){
- 160   2                      LedLoad(0,5);
- 161   2                      uart_send_string("setting or confirm");
- 162   2              }else if(keycode==0x1b){
- 163   2                      LedLoad(0,14);
- 164   2              }else{
- 165   2                      ;
- 166   2              }
- 167   1      }
- 168          
- 169          
+ 147          void timeToHexString(Time *time,unsigned char *str){
+ 148   1              str[0]=time->year>>8;
+ 149   1              str[1]=time->year&0xff;
+ 150   1              str[2]=time->mon;
+ 151   1              str[3]=time->day;
+ 152   1              str[4]=time->hour;
+ 153   1              str[5]=time->min;
+ 154   1              str[6]=time->sec;
+ 155   1              str[7]=time->week;      
+ 156   1      }
+ 157          
+ 158          void KeyAction(unsigned char keycode){
+ 159   1              if((keycode>='0')&&(keycode<='9')){             
+ 160   2                      LedLoad(0,0);           
+ 161   2                      uart_send_string("hello world:123456789");
+ 162   2              }else if(keycode==0x26){
+ 163   2                      LedLoad(0,1);
+ 164   2              }else if(keycode==0x28){
+ 165   2                      LedLoad(0,2);
+ 166   2              }else if(keycode==0x25){
+ 167   2                      LedLoad(0,3);
+ 168   2              }else if(keycode==0x27){
+ 169   2                      LedLoad(0,4);
+ 170   2              }else if(keycode==0x0d){
+ 171   2                      LedLoad(0,16);
+ 172   2                      uart_send_string("setting or confirm");
+ 173   2              }else if(keycode==0x1b){
+ 174   2                      LedLoad(0,14);
+ 175   2              }else{
+ 176   2                      ;
+ 177   2              }
+ 178   1      }
+ 179          
+C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 19:43:42 PAGE 4   
+
+ 180          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    793    ----
+   CODE SIZE        =    814    ----
    CONSTANT SIZE    =     62    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      8      34
+   DATA SIZE        =      6      35
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      2    ----
-C51 COMPILER V9.60.0.0   MAIN                                                              06/05/2019 14:59:33 PAGE 4   
-
 END OF MODULE INFORMATION.
 
 

@@ -20,6 +20,10 @@ extern void KeyScan();
 extern void ConfigTimer1(unsigned int ms);
 extern void uart_send_string(unsigned char *str);
 extern void uart_send_hex_string(unsigned char *str,unsigned int len);
+extern void InitQueue();
+extern unsigned char DeleteQueue();
+extern unsigned char flagUart;
+
 
 void ConfigTimer0(unsigned int ms);
 void ConfigUART(unsigned int baud);
@@ -34,37 +38,44 @@ unsigned char T0RH=0;
 unsigned char T0RL=0;
 unsigned long code freq=24000000;
 unsigned char settime=0;
-unsigned char uartRecvByte=0;
-unsigned char recvflag=0;
+
 
 
 
 void main(){
-   unsigned char backsec=0xAA;
-   unsigned char str[9]={'\0'};
-   Time time = {0};   
+	Time time = {0};   
+	unsigned char backsec=0xAA;
+	unsigned char str[9]={'\0'};
+	unsigned char command=0;
 
-   EA=1;
-   ConfigTimer0(1);
-   ConfigUART(9600);
-   InitDS1302();
+    EA=1;
+    InitQueue();
+	InitDS1302();
+	ConfigTimer0(1);
+	ConfigUART(9600);
 
-   while(1){
-	   KeyGet();	   
-	   if(flag200ms&&(settime==0)){
-		   flag200ms=0;
-		   GetRealTime(&time);		   
-		   if(time.sec!=backsec){
-			 	LoadTime(&time);				
+
+    while(1){
+		KeyGet();	   
+		if(flag200ms&&(settime==0)){
+			flag200ms=0;
+			GetRealTime(&time);		   
+			if(time.sec!=backsec){
+				LoadTime(&time);				
 				backsec=time.sec;
-		   }
-	   }
-	   if(flag1s){
-		   flag1s=0;
-		   timeToHexString(&time,str);
-		   uart_send_hex_string(str,8);
-	   }
-   }
+			}
+		}
+		if(flag1s){
+			flag1s=0;
+			timeToHexString(&time,str);
+			uart_send_hex_string(str,8);
+		}
+		if(flagUart){
+			flagUart=0;
+			command=DeleteQueue();			
+			KeyAction(command);
+		}		
+	}
 }
 
 void ConfigTimer0(unsigned int ms){
@@ -157,7 +168,7 @@ void KeyAction(unsigned char keycode){
 	}else if(keycode==0x27){
 		LedLoad(0,4);
 	}else if(keycode==0x0d){
-		LedLoad(0,5);
+		LedLoad(0,16);
 		uart_send_string("setting or confirm");
 	}else if(keycode==0x1b){
 		LedLoad(0,14);

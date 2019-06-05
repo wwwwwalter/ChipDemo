@@ -2,12 +2,11 @@
 
 unsigned char T1RH=0;
 unsigned char T1RL=0;
+unsigned char flagUart;
 
-
-extern unsigned char uartRecvByte;
-extern unsigned char recvflag; 
 extern unsigned long code freq;
 extern void LedLoad(unsigned char index,unsigned char dat);
+extern EnterQueue(unsigned char byte);
 
 void send_byte(unsigned char byte);
 void uart_send_string(unsigned char *str);
@@ -27,14 +26,13 @@ void ConfigUART(unsigned int baud){
 	TR1=1;
 }
 
-void InterrptUART() interrupt 4{
+void InterrptUART() interrupt 4{	
 	if(RI){		
-		RI=0;
-		uartRecvByte=SBUF;
-		recvflag=1;
-		LedLoad(0,uartRecvByte);		
+		RI=0;  
+		EnterQueue(SBUF);		
+		flagUart=1;				
 	}	
-	if(TI);
+	if(TI);	
 }
 
 void uart_send_hex_string(unsigned char *p,unsigned int len){

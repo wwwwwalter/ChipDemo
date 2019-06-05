@@ -3,6 +3,7 @@
 "led.obj",
 "main.obj",
 "key.obj",
-"uart.obj" 
+"uart.obj",
+"queue.obj" 
 TO "time" 
 RAMSIZE(256) 
