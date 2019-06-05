@@ -11,6 +11,7 @@ extern void LedLoad(unsigned char index,unsigned char dat);
 
 void send_byte(unsigned char byte);
 void uart_send_string(unsigned char *str);
+void uart_send_hex_string(unsigned char *str,unsigned int len);
 
 
 
@@ -34,6 +35,13 @@ void InterrptUART() interrupt 4{
 		LedLoad(0,uartRecvByte);		
 	}	
 	if(TI);
+}
+
+void uart_send_hex_string(unsigned char *p,unsigned int len){
+	for(len;len>0;len--){
+		send_byte(*p);
+		p++;
+	}
 }
 
 void uart_send_string(unsigned char *p){

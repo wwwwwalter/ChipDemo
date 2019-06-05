@@ -19,15 +19,13 @@ extern void KeyGet();
 extern void KeyScan();
 extern void ConfigTimer1(unsigned int ms);
 extern void uart_send_string(unsigned char *str);
+extern void uart_send_hex_string(unsigned char *str,unsigned int len);
 
 void ConfigTimer0(unsigned int ms);
 void ConfigUART(unsigned int baud);
 void LoadTime(Time *time);
 void KeyAction(unsigned char keycode);
-void timeToString(Time *time,unsigned char *str);
-
-
-
+void timeToHexString(Time *time,unsigned char *str);
 
 
 bit flag200ms=1;
@@ -47,7 +45,7 @@ void main(){
    Time time = {0};   
 
    EA=1;
-   ConfigTimer0(1);  
+   ConfigTimer0(1);
    ConfigUART(9600);
    InitDS1302();
 
@@ -63,8 +61,8 @@ void main(){
 	   }
 	   if(flag1s){
 		   flag1s=0;
-		   timeToString(&time,str);
-		   uart_send_string(str);
+		   timeToHexString(&time,str);
+		   uart_send_hex_string(str,8);
 	   }
    }
 }
@@ -82,6 +80,7 @@ void ConfigTimer0(unsigned int ms){
 	TL0=T0RL;
 	ET0=1;
 	TR0=1;
+	PT0=1; 
 }
 /*
 void ConfigTimer1(unsigned int ms){
@@ -134,7 +133,7 @@ void LoadTime(Time *time){
 	LedLoad(7,time->hour>>4&0x03);
 }
 
-void timeToString(Time *time,unsigned char *str){
+void timeToHexString(Time *time,unsigned char *str){
 	str[0]=time->year>>8;
 	str[1]=time->year&0xff;
 	str[2]=time->mon;
@@ -142,8 +141,7 @@ void timeToString(Time *time,unsigned char *str){
 	str[4]=time->hour;
 	str[5]=time->min;
 	str[6]=time->sec;
-	str[7]=time->week;
-	str[8]='\0';
+	str[7]=time->week;	
 }
 
 void KeyAction(unsigned char keycode){
