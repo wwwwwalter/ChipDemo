@@ -10,9 +10,9 @@ typedef struct Queue{
 
 MsgQueue msg;
 
+bit IsEmptyQueue();
+bit IsFullQueue();
 void InitQueue();
-unsigned char IsEmptyQueue();
-unsigned char IsFullQueue();
 unsigned char DeleteQueue();
 void EnterQueue(unsigned char byte);
 
@@ -22,16 +22,16 @@ void InitQueue(){
 	msg.rear=0;
 }
 
-unsigned char IsEmptyQueue(){
+bit IsEmptyQueue(){
 	return msg.front==msg.rear;
 }
 
-unsigned char IsFullQueue(){
+bit IsFullQueue(){
 	return (msg.rear+1)%QUEUELEN==msg.front;
 }
 
 void EnterQueue(unsigned char byte){
-	if(IsFullQueue==1){
+	if(IsFullQueue()){
 		;
 	}
 	else{
@@ -44,7 +44,7 @@ void EnterQueue(unsigned char byte){
 
 unsigned char DeleteQueue(){
 	unsigned char temp=0;
-	if(IsEmptyQueue==1){
+	if(IsEmptyQueue()){
 		return 0xFF;
 	}
 	if(msg.front==QUEUELEN)

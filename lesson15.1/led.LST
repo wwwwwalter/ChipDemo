@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LED                                                               06/05/2019 19:44:40 PAGE 1   
+C51 COMPILER V9.60.0.0   LED                                                               06/06/2019 12:49:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
@@ -18,7 +18,7 @@ line level    source
    9                  0x66, 0x6d, 0x7d, 0x07,
   10                  0x7f, 0x6f, 0x77, 0x7c,
   11                  0x39, 0x5e, 0x79, 0x71,
-  12                  0x49
+  12                  0x49, 0x00
   13          };
   14          unsigned char code LedCharYang[] = {
   15                  0xC0, 0xF9, 0xA4, 0xB0, 
@@ -62,11 +62,11 @@ line level    source
   53   1      }
 
 
-C51 COMPILER V9.60.0.0   LED                                                               06/05/2019 19:44:40 PAGE 2   
+C51 COMPILER V9.60.0.0   LED                                                               06/06/2019 12:49:15 PAGE 2   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    149    ----
-   CONSTANT SIZE    =     33    ----
+   CONSTANT SIZE    =     34    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =      9    ----

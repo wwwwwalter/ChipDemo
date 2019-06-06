@@ -28,22 +28,33 @@ extern unsigned char flagUart;
 void ConfigTimer0(unsigned int ms);
 void ConfigUART(unsigned int baud);
 void LoadTime(Time *time);
+void FlashTime(Time *time);
 void KeyAction(unsigned char keycode);
 void timeToHexString(Time *time,unsigned char *str);
+void EnterTimeSet();
+void ExitTimeSet(bit save);
+void IncSetTime();
+void DecSetTime();
+void LeftShift();
+void RightShift();
+unsigned char IncBcdHigh(unsigned char bcd);
+unsigned char IncBcdLow(unsigned char bcd);
+unsigned char DecBcdHigh(unsigned char bcd);
+unsigned char DecBcdLow(unsigned char bcd);
 
 
 bit flag200ms=1;
 bit flag1s=1;
+Time time = {0};   
 unsigned char T0RH=0;
 unsigned char T0RL=0;
 unsigned long code freq=24000000;
-unsigned char settime=0;
+unsigned char setIndex=0;
 
 
 
 
-void main(){
-	Time time = {0};   
+void main(){	
 	unsigned char backsec=0xAA;
 	unsigned char str[9]={'\0'};
 	unsigned char command=0;
@@ -56,27 +67,36 @@ void main(){
 
 
     while(1){
-		KeyGet();	   
-		if(flag200ms&&(settime==0)){
-			flag200ms=0;
-			GetRealTime(&time);		   
-			if(time.sec!=backsec){
-				LoadTime(&time);				
-				backsec=time.sec;
-			}
-		}
-		if(flag1s){
-			flag1s=0;
-			timeToHexString(&time,str);
-			uart_send_hex_string(str,8);
-		}
+		KeyGet();
 		if(flagUart){
 			flagUart=0;
 			command=DeleteQueue();			
 			KeyAction(command);
-		}		
+		}	
+		if(setIndex==0){
+			if(flag200ms){
+				flag200ms=0;
+				GetRealTime(&time);		   
+				if(time.sec!=backsec){
+					LoadTime(&time);				
+					backsec=time.sec;
+				}
+			}
+			if(flag1s){
+				flag1s=0;
+				timeToHexString(&time,str);
+				uart_send_hex_string(str,8);
+			}
+		}else{
+			if(flag200ms){				
+				flag200ms=0;
+				FlashTime(&time);
+			}
+		}			
+			
 	}
 }
+
 
 void ConfigTimer0(unsigned int ms){
 	unsigned long tmp;
@@ -144,6 +164,16 @@ void LoadTime(Time *time){
 	LedLoad(7,time->hour>>4&0x03);
 }
 
+void FlashTime(Time *time){
+	static bit flash=0;
+	flash=!flash;
+	if(!flash){
+		LedLoad(setIndex,17);
+	}else{
+		LoadTime(time);
+	}	
+}
+
 void timeToHexString(Time *time,unsigned char *str){
 	str[0]=time->year>>8;
 	str[1]=time->year&0xff;
@@ -158,23 +188,114 @@ void timeToHexString(Time *time,unsigned char *str){
 void KeyAction(unsigned char keycode){
 	if((keycode>='0')&&(keycode<='9')){		
 		LedLoad(0,0);		
-		uart_send_string("hello world:123456789");
 	}else if(keycode==0x26){
-		LedLoad(0,1);
+		IncSetTime();
 	}else if(keycode==0x28){
-		LedLoad(0,2);
+		DecSetTime();
 	}else if(keycode==0x25){
-		LedLoad(0,3);
+		LeftShift();
 	}else if(keycode==0x27){
-		LedLoad(0,4);
-	}else if(keycode==0x0d){
-		LedLoad(0,16);
-		uart_send_string("setting or confirm");
+		RightShift();
+	}else if(keycode==0x0d){		
+		if(setIndex==0){
+			EnterTimeSet();
+		}else{
+			ExitTimeSet(1);
+		}
 	}else if(keycode==0x1b){
-		LedLoad(0,14);
+		ExitTimeSet(0);
 	}else{
 		;
 	}
 }
+
+void EnterTimeSet(){
+	setIndex=7;	
+}
+
+void ExitTimeSet(bit save){
+	setIndex=0;
+	if(save){
+		SetRealTime(&time);
+	}
+}
+
+void LeftShift(){
+	if(setIndex>=7){
+		setIndex=2;
+	}else{
+		setIndex++;
+	}
+}
+
+void RightShift(){
+	if(setIndex<=2){
+		setIndex=7;
+	}else{
+		setIndex--;
+	}
+}
+
+unsigned char IncBcdHigh(unsigned char bcd){
+	if((bcd&0xf0)<0x90){
+		bcd+=0x10;
+	}else{
+		bcd&=0x0f;
+	}
+	return bcd;
+}
+unsigned char IncBcdLow(unsigned char bcd){
+	if((bcd&0x0f)<0x09){
+		bcd+=0x01;
+	}else{
+		bcd&=0xf0;
+	}
+	return bcd;
+}
+unsigned char DecBcdHigh(unsigned char bcd){
+	if((bcd&0xf0)>0x00){
+		bcd-=0x10;
+	}else{
+		bcd|=0x90;
+	}
+	return bcd;
+}
+unsigned char DecBcdLow(unsigned char bcd){
+	if((bcd&0x0f)>0x00){
+		bcd-=0x01;
+	}else{
+		bcd|=-0x09;
+	}
+	return bcd;
+}
+
+void IncSetTime(){
+	LedLoad(0,setIndex);
+	switch(setIndex){
+		case 7:time.hour=IncBcdHigh(time.hour);break;
+		case 6:time.hour=IncBcdLow(time.hour);break;
+		case 5:time.min=IncBcdHigh(time.min);break;
+		case 4:time.min=IncBcdLow(time.min);break;
+		case 3:time.sec=IncBcdHigh(time.sec);break;
+		case 2:time.sec=IncBcdLow(time.sec);break;
+		default:break;		
+	}
+	LoadTime(&time);
+}
+
+void DecSetTime(){
+	LedLoad(0,setIndex);
+	switch(setIndex){
+		case 7:time.hour=DecBcdHigh(time.hour);break;
+		case 6:time.hour=DecBcdLow(time.hour);break;
+		case 5:time.min=DecBcdHigh(time.min);break;
+		case 4:time.min=DecBcdLow(time.min);break;
+		case 3:time.sec=DecBcdHigh(time.sec);break;
+		case 2:time.sec=DecBcdLow(time.sec);break;
+		default:break;
+	}
+	LoadTime(&time);
+}
+
 
 

@@ -1,11 +1,11 @@
 #include <reg52.h>
 
-//in//默认高电平
+//in
 sbit Col0 = P2^4;
 sbit Col1 = P2^5;
 sbit Col2 = P2^6;
 sbit Col3 = P2^7;
-//out//轮流低电平
+//out
 sbit Row0 = P2^0;
 sbit Row1 = P2^1;
 sbit Row2 = P2^2;

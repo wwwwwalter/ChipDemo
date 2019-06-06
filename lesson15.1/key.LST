@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 18:26:51 PAGE 1   
+C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 22:09:13 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
@@ -9,12 +9,12 @@ line level    source
 
    1          #include <reg52.h>
    2          
-   3          //in//默认高电平
+   3          //in
    4          sbit Col0 = P2^4;
    5          sbit Col1 = P2^5;
    6          sbit Col2 = P2^6;
    7          sbit Col3 = P2^7;
-   8          //out//轮流低电平
+   8          //out
    9          sbit Row0 = P2^0;
   10          sbit Row1 = P2^1;
   11          sbit Row2 = P2^2;
@@ -28,10 +28,10 @@ line level    source
   19          };
   20          
   21          unsigned char code KeyCodeMap[4][4]={
-  22                  {0x31, 0x32, 0x33, 0x26},//数字键 1、数字键 2、数字键 3、 向上键
-  23                  {0x34, 0x35, 0x36, 0x28},//数字键 4、数字键 5、数字键 6、 向下键
-  24                  {0x37, 0x38, 0x39, 0x25},//数字键 7、数字键 8、数字键 9、 向左键
-  25                  {0x30, 0x1B, 0x0D, 0x27} //数字键 0、ESC键、 回车键、    向右键
+  22                  {0x31, 0x32, 0x33, 0x26},
+  23                  {0x34, 0x35, 0x36, 0x28},
+  24                  {0x37, 0x38, 0x39, 0x25},
+  25                  {0x30, 0x1B, 0x0D, 0x27} 
   26          };
   27          
   28          
@@ -62,7 +62,7 @@ line level    source
   53   1              unsigned char i;
   54   1              static unsigned char keyout=0;
   55   1              static unsigned char keybuf[4][4] = {
-C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 18:26:51 PAGE 2   
+C51 COMPILER V9.60.0.0   KEY                                                               06/05/2019 22:09:13 PAGE 2   
 
   56   1                      {0xff,0xff,0xff,0xff},
   57   1                      {0xff,0xff,0xff,0xff},
