@@ -186,26 +186,31 @@ void timeToHexString(Time *time,unsigned char *str){
 }
 
 void KeyAction(unsigned char keycode){
-	if((keycode>='0')&&(keycode<='9')){		
-		LedLoad(0,0);		
-	}else if(keycode==0x26){
-		IncSetTime();
-	}else if(keycode==0x28){
-		DecSetTime();
-	}else if(keycode==0x25){
-		LeftShift();
-	}else if(keycode==0x27){
-		RightShift();
-	}else if(keycode==0x0d){		
-		if(setIndex==0){
+	
+	if(setIndex==0){
+		if(keycode==0x0d){
 			EnterTimeSet();
 		}else{
-			ExitTimeSet(1);
+			return;
 		}
-	}else if(keycode==0x1b){
-		ExitTimeSet(0);
 	}else{
-		;
+		if((keycode>='0')&&(keycode<='9')){		
+			LedLoad(0,0);		
+		}else if(keycode==0x26){
+			IncSetTime();
+		}else if(keycode==0x28){
+			DecSetTime();
+		}else if(keycode==0x25){
+			LeftShift();
+		}else if(keycode==0x27){
+			RightShift();
+		}else if(keycode==0x0d){				
+			ExitTimeSet(1);			
+		}else if(keycode==0x1b){
+			ExitTimeSet(0);
+		}else{
+			return;
+		}
 	}
 }
 
