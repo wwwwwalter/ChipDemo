@@ -1,0 +1,100 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 21:14:39 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define freq 24000000
+   3          extern void InitLcd();
+   4          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str,unsigned char len);
+   5          
+   6          bit flag500ms=0;
+   7          
+   8          unsigned char T0RH=0;
+   9          unsigned char T0RL=0;
+  10          unsigned char code str1[]="0123456789abcdefghijklmnopqrstuvwxyz";
+  11          unsigned char code str2[]="0123456789abcdefghijklmnopqrstuvwxyz";
+  12          
+  13          void ConfigTimer0(unsigned int ms);
+  14          
+  15          
+  16          void main(void){
+  17   1              unsigned char i;
+  18   1              unsigned char index=0;
+  19   1              unsigned char pdata bufMove1[16+sizeof(str1)+16];
+  20   1              unsigned char pdata bufMove2[16+sizeof(str2)+16];
+  21   1              EA=1;
+  22   1              ConfigTimer0(10);
+  23   1              InitLcd();
+  24   1              for(i=0;i<16;++i){
+  25   2                      bufMove1[i]=' ';
+  26   2                      bufMove2[i]=' ';
+  27   2              }
+  28   1              for(i=0;i<(sizeof(str1)-1);i++){
+  29   2                      bufMove1[16+i]=str1[i];
+  30   2                      bufMove2[16+i]=str2[i];
+  31   2              }
+  32   1              for(i=(16+sizeof(str1)-1);i<sizeof(bufMove1);i++){
+  33   2                      bufMove1[i]=' ';
+  34   2                      bufMove2[i]=' ';
+  35   2              }
+  36   1              
+  37   1              while(1){
+  38   2                      if(flag500ms){
+  39   3                              flag500ms=0;
+  40   3                              LcdShowStr(0,0,bufMove1+index,16);
+  41   3                              LcdShowStr(0,1,bufMove2+index,16);
+  42   3                              index++;
+  43   3                              if(index>=(16+sizeof(str1)-1)){
+  44   4                                      index=0;
+  45   4                              }                       
+  46   3                      }
+  47   2              }
+  48   1      }
+  49          
+  50          void ConfigTimer0(unsigned int ms){
+  51   1              unsigned long tmp;
+  52   1              tmp=freq/12/1000*ms;
+  53   1              tmp=65536-tmp;
+  54   1              tmp+=12;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 21:14:39 PAGE 2   
+
+  55   1              T0RH=(unsigned char)(tmp>>8);
+  56   1              T0RL=(unsigned char)tmp;
+  57   1              TMOD&=0xf0;
+  58   1              TMOD|=0x01;
+  59   1              TH0=T0RH;
+  60   1              TL0=T0RL;
+  61   1              ET0=1;
+  62   1              TR0=1;
+  63   1      }
+  64          
+  65          void InterruptTimer0() interrupt 1{
+  66   1              static unsigned char i=0;
+  67   1              TH0=T0RH;
+  68   1              TL0=T0RL;
+  69   1              i++;
+  70   1              if(i>=50){
+  71   2                      i=0;
+  72   2                      flag500ms=1;
+  73   2              }
+  74   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    299    ----
+   CONSTANT SIZE    =     74    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----     138
+   DATA SIZE        =      3       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

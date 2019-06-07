@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   53          
   54          
   55          
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 2   
 
   56          
   57          void main(){    
@@ -126,7 +126,7 @@ line level    source
  115   1      }
  116          /*
  117          void ConfigTimer1(unsigned int ms){
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 3   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 3   
 
  118                  unsigned long tmp;
  119                  tmp=freq/12/1000*ms;
@@ -190,7 +190,7 @@ line level    source
  177          void timeToHexString(Time *time,unsigned char *str){
  178   1              str[0]=time->year>>8;
  179   1              str[1]=time->year&0xff;
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 4   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 4   
 
  180   1              str[2]=time->mon;
  181   1              str[3]=time->day;
@@ -254,7 +254,7 @@ line level    source
  239   2              }else{
  240   2                      setIndex--;
  241   2              }
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 5   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 5   
 
  242   1      }
  243          
@@ -318,7 +318,7 @@ line level    source
  301   2              }
  302   1              LoadTime(&time);
  303   1      }
-C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 09:48:05 PAGE 6   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/07/2019 11:19:14 PAGE 6   
 
  304          
  305          
