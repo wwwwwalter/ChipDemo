@@ -111,7 +111,7 @@ void ConfigTimer0(unsigned int ms){
 	TL0=T0RL;
 	ET0=1;
 	TR0=1;
-	PT0=1; 
+	//PT0=1; 
 }
 /*
 void ConfigTimer1(unsigned int ms){
