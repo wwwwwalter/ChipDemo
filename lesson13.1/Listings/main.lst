@@ -1,0 +1,197 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 11:04:32 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define freq 24000000
+   3          unsigned char T0RH=0;
+   4          unsigned char T0RL=0;
+   5          unsigned char step=0;
+   6          unsigned char oprt=0;
+   7          signed long num1=0;
+   8          signed long num2=0;
+   9          signed long result=0;
+  10          
+  11          extern void LcdInit();
+  12          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
+  13          extern void LcdAreaClear(unsigned char x,unsigned char y,unsigned char len);
+  14          extern void LcdFullClear();
+  15          extern void KeyGet();
+  16          extern void KeyScan();
+  17          
+  18          void ConfigTimer0(unsigned int ms);
+  19          void KeyAction(unsigned char keycode);
+  20          void NumKeyAction(unsigned char n);
+  21          void OprtKeyAction(unsigned char type);
+  22          void GetResult();
+  23          void Reset();
+  24          void ShowOprt(unsigned char y,unsigned char type);
+  25          unsigned char LongToString(unsigned char *str,signed long dat);
+  26          
+  27          void main(void){
+  28   1              EA=1;
+  29   1              ConfigTimer0(1);
+  30   1              LcdInit();
+  31   1              LcdShowStr(15,1,"0");
+  32   1              while(1){
+  33   2                      KeyGet();
+  34   2              }
+  35   1      }
+  36          
+  37          void ConfigTimer0(unsigned int ms){
+  38   1              unsigned long tmp;
+  39   1              tmp=freq/12/1000*ms;
+  40   1              tmp=65536-tmp;
+  41   1              tmp+=12;
+  42   1              T0RH=(unsigned char)(tmp>>8);
+  43   1              T0RL=(unsigned char)tmp;
+  44   1              TMOD&=0xf0;
+  45   1              TMOD|=0x01;
+  46   1              TH0=T0RH;
+  47   1              TL0=T0RL;
+  48   1              ET0=1;
+  49   1              TR0=1;  
+  50   1      }
+  51          void InterruptTimer0() interrupt 1{
+  52   1              TH0=T0RH;
+  53   1              TL0=T0RL;
+  54   1              KeyScan();
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 11:04:32 PAGE 2   
+
+  55   1      }
+  56          
+  57          void KeyAction(unsigned char keycode){
+  58   1              if((keycode>='0')&&(keycode<='9')){
+  59   2                      NumKeyAction(keycode-'0');
+  60   2              }else if(keycode==0x26){
+  61   2                      OprtKeyAction(0);
+  62   2              }else if(keycode==0x28){
+  63   2                      OprtKeyAction(1);
+  64   2              }else if(keycode==0x25){
+  65   2                      OprtKeyAction(2);
+  66   2              }else if(keycode==0x27){
+  67   2                      OprtKeyAction(3);
+  68   2              }else if(keycode==0x0d){
+  69   2                      GetResult();
+  70   2              }else if(keycode==0x1b){
+  71   2                      Reset();
+  72   2                      LcdShowStr(15,1,"0");
+  73   2              }
+  74   1      }
+  75          
+  76          void NumKeyAction(unsigned char n){
+  77   1              unsigned char len;
+  78   1              unsigned char str[12];
+  79   1              if(step>1){
+  80   2                      Reset();
+  81   2              }
+  82   1              if(step==0){
+  83   2                      num1=num1*10+n;
+  84   2                      len=LongToString(str,num1);
+  85   2                      LcdShowStr(16-len,1,str);
+  86   2              }else{
+  87   2                      num2=num2*10+n;
+  88   2                      len=LongToString(str,num2);
+  89   2                      LcdShowStr(16-len,1,str);
+  90   2              }
+  91   1      }
+  92          
+  93          void OprtKeyAction(unsigned char type){
+  94   1              unsigned char len;
+  95   1              unsigned char str[12];
+  96   1              if(step==0){
+  97   2                      len=LongToString(str,num1);
+  98   2                      LcdAreaClear(0,0,16-len);
+  99   2                      LcdShowStr(16-len,0,str);
+ 100   2                      ShowOprt(1,type);
+ 101   2                      LcdAreaClear(1,1,14);
+ 102   2                      LcdShowStr(15,1,"0");
+ 103   2                      oprt=type;
+ 104   2                      step=1; 
+ 105   2              }
+ 106   1      }
+ 107          
+ 108          unsigned char LongToString(unsigned char *str,signed long dat){
+ 109   1              signed char i=0;
+ 110   1              unsigned char len=0;
+ 111   1              unsigned char buf[12];
+ 112   1              if(dat<0){
+ 113   2                      dat=-dat;
+ 114   2                      *str++='-';
+ 115   2                      len++;
+ 116   2              }       
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 11:04:32 PAGE 3   
+
+ 117   1              do{
+ 118   2                      buf[i++]=dat%10;
+ 119   2                      dat/=10;
+ 120   2              }while(dat>0);  
+ 121   1              len+=i;
+ 122   1              while(i--){
+ 123   2                      *str++=buf[i]+'0';
+ 124   2              }
+ 125   1              *str='\0';
+ 126   1              return len;
+ 127   1      }
+ 128          
+ 129          void GetResult(){
+ 130   1              unsigned char len;
+ 131   1              unsigned char str[12];
+ 132   1              if(step==1){
+ 133   2                      step=2;
+ 134   2                      switch(oprt){
+ 135   3                              case 0:result=num1+num2;break;
+ 136   3                              case 1:result=num1-num2;break;
+ 137   3                              case 2:result=num1*num2;break;
+ 138   3                              case 3:result=num1/num2;break;
+ 139   3                              default:break;
+ 140   3                      }
+ 141   2              }
+ 142   1              len=LongToString(str,num2);
+ 143   1              ShowOprt(0,oprt);
+ 144   1              LcdAreaClear(1,0,16-1-len);
+ 145   1              LcdShowStr(16-len,0,str);
+ 146   1              len=LongToString(str,result);
+ 147   1              LcdShowStr(0,1,"=");
+ 148   1              LcdAreaClear(1,1,16-1-len);
+ 149   1              LcdShowStr(16-len,1,str);
+ 150   1      }
+ 151          
+ 152          void Reset(){
+ 153   1              num1=0;
+ 154   1              num2=0;
+ 155   1              step=0;
+ 156   1              LcdFullClear();
+ 157   1      }
+ 158          
+ 159          void ShowOprt(unsigned char y,unsigned char type){
+ 160   1              switch(type){
+ 161   2                      case 0:LcdShowStr(0,y,"+");break;
+ 162   2                      case 1:LcdShowStr(0,y,"-");break;
+ 163   2                      case 2:LcdShowStr(0,y,"*");break;
+ 164   2                      case 3:LcdShowStr(0,y,"/");break;
+ 165   2                      default:break;
+ 166   2              }
+ 167   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1030    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16      68
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 11:04:32 PAGE 4   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
