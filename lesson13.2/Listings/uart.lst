@@ -1,0 +1,119 @@
+C51 COMPILER V9.60.0.0   UART                                                              06/08/2019 12:21:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\uart.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE uart.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\uart.lst) OBJECT(.\Objects\uart.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #ifndef freq
+   3          #define freq 24000000
+   4          #endif
+   5          
+   6          extern void UartAction(unsigned char *buf,unsigned char len);
+   7          
+   8          bit flagFrame=0;
+   9          bit flagTxd=0;
+  10          unsigned char cntRxd=0;
+  11          unsigned char pdata bufRxd[64];
+  12          
+  13          void UartDriver();
+  14          void ConfigUART(unsigned int baud);
+  15          void UartRxMonitor(unsigned char ms);
+  16          void UartWrite(unsigned char *buf,unsigned char len);
+  17          unsigned char UartRead(unsigned char *buf,unsigned char len);
+  18          
+  19          void ConfigUART(unsigned int baud){
+  20   1              SCON=0x50;
+  21   1              TMOD&=0x0f;
+  22   1              TMOD|=0x20;
+  23   1              PCON |=0x80;
+  24   1              TH1=256-(freq/12/16)/baud;
+  25   1              TL1=TH1;
+  26   1              ET1=0;
+  27   1              ES=1;
+  28   1              TR1=1;
+  29   1      }
+  30          
+  31          void InterruptUART() interrupt 4{
+  32   1              if(RI){
+  33   2                      RI=0;
+  34   2                      if(cntRxd<sizeof(bufRxd)){
+  35   3                              bufRxd[cntRxd++]=SBUF;
+  36   3                      }
+  37   2              }
+  38   1              if(TI){
+  39   2                      TI=0;
+  40   2                      flagTxd=1;
+  41   2              }
+  42   1      }
+  43          
+  44          void UartWrite(unsigned char *buf,unsigned char len){
+  45   1              while(len--){
+  46   2                      flagTxd=0;
+  47   2                      SBUF=*buf++;
+  48   2                      while(!flagTxd);
+  49   2              }
+  50   1      }       
+  51          
+  52          unsigned char UartRead(unsigned char *buf,unsigned char len){
+  53   1              unsigned char i;
+  54   1              if(len>cntRxd){
+C51 COMPILER V9.60.0.0   UART                                                              06/08/2019 12:21:08 PAGE 2   
+
+  55   2                      len=cntRxd;
+  56   2              }
+  57   1              for(i=0;i<len;++i){
+  58   2                      *buf++=bufRxd[i];
+  59   2              }
+  60   1              cntRxd=0;
+  61   1              return len;
+  62   1      }
+  63          
+  64          void UartRxMonitor(unsigned char ms){
+  65   1              static unsigned char cntbkp=0;
+  66   1              static unsigned char idletmr=0;
+  67   1              
+  68   1              if(cntRxd>0){
+  69   2                      if(cntbkp!=cntRxd){
+  70   3                              cntbkp=cntRxd;
+  71   3                              idletmr=0;
+  72   3                      }else{
+  73   3                              if(idletmr<30){
+  74   4                                      idletmr+=ms;
+  75   4                                      if(idletmr>=30){
+  76   5                                              flagFrame=1;
+  77   5                                      }
+  78   4                              }
+  79   3                      }
+  80   2              }else{
+  81   2                      cntbkp=0;
+  82   2              }
+  83   1      }
+  84          
+  85          void UartDriver(){
+  86   1              unsigned char len;
+  87   1              unsigned char pdata buf[40];
+  88   1              if(flagFrame){
+  89   2                      flagFrame=0;
+  90   2                      len=UartRead(buf,sizeof(buf));
+  91   2                      UartAction(buf,len);
+  92   2              }
+  93   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    275    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =     64      40
+   DATA SIZE        =      3       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

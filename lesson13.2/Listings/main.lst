@@ -1,0 +1,127 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 12:51:39 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #ifndef freq
+   3          #define freq 24000000
+   4          #endif
+   5          
+   6          extern void UartDriver();
+   7          extern void ConfigUART(unsigned int baud);
+   8          extern void UartRxMonitor(unsigned char ms);
+   9          extern void UartWrite(unsigned char *buf,unsigned char len);
+  10          extern void LcdInit();
+  11          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
+  12          extern void LcdAreaClear(unsigned char x,unsigned char y,unsigned char len);
+  13          
+  14          sbit BUZZ=P3^2;
+  15          bit flagBuzzOn=0;
+  16          unsigned char T0RH=0;
+  17          unsigned char T0RL=0;
+  18          
+  19          void ConfigTimer0(unsigned int ms);
+  20          void UartAction(unsigned char *buf,unsigned char len);
+  21          bit CmpMemory(unsigned char *ptr1,unsigned char *ptr2,unsigned char len);
+  22          
+  23          
+  24          void main(void){
+  25   1              EA=1;
+  26   1              ConfigTimer0(1);
+  27   1              ConfigUART(9600);
+  28   1              LcdInit();
+  29   1              while(1){
+  30   2                      UartDriver();
+  31   2              }       
+  32   1      }
+  33          
+  34          void ConfigTimer0(unsigned int ms){
+  35   1              unsigned long tmp;
+  36   1              tmp=freq/12/1000*ms;
+  37   1              tmp=65536-tmp;
+  38   1              tmp+=12;
+  39   1              T0RH=(unsigned char)(tmp>>8);
+  40   1              T0RL=(unsigned char)tmp;
+  41   1              TMOD&=0xf0;
+  42   1              TMOD|=0x01;
+  43   1              TH0=T0RH;
+  44   1              TL0=T0RL;
+  45   1              ET0=1;
+  46   1              TR0=1;  
+  47   1      }
+  48          
+  49          void InterruptTimer0() interrupt 1{
+  50   1              TH0=T0RH;
+  51   1              TL0=T0RL;
+  52   1              if(flagBuzzOn){
+  53   2                      BUZZ=~BUZZ;
+  54   2              }else{
+C51 COMPILER V9.60.0.0   MAIN                                                              06/08/2019 12:51:39 PAGE 2   
+
+  55   2                      BUZZ=1;
+  56   2              }
+  57   1              UartRxMonitor(1);
+  58   1      }
+  59          
+  60          bit CmpMemory(unsigned char *ptr1,unsigned char *ptr2,unsigned char len){
+  61   1              while(len--){
+  62   2                      if(*ptr1++!=*ptr2++){
+  63   3                              return 0;
+  64   3                      }
+  65   2              }
+  66   1              return 1;
+  67   1      }
+  68          
+  69          void UartAction(unsigned char *buf,unsigned char len){
+  70   1              unsigned char i;
+  71   1              unsigned char code cmd0[]="buzz on";
+  72   1              unsigned char code cmd1[]="buzz off";
+  73   1              unsigned char code cmd2[]="showstr";
+  74   1              unsigned char code cmdLen[]={sizeof(cmd0)-1,sizeof(cmd1)-1,sizeof(cmd2)-1};
+  75   1              //unsigned char code *cmdPtr[]={&cmd0[0],&cmd1[0],&cmd2[0]};
+  76   1              unsigned char code *cmdPtr[]={cmd0,cmd1,cmd2};
+  77   1              for(i=0;i<sizeof(cmdLen);++i){
+  78   2                      if(len>=cmdLen[i]){
+  79   3                              if(CmpMemory(buf,cmdPtr[i],cmdLen[i])){
+  80   4                                      break;
+  81   4                              }
+  82   3                      }
+  83   2              }
+  84   1              switch(i){
+  85   2                      case 0:flagBuzzOn=1;break;
+  86   2                      case 1:flagBuzzOn=0;break;
+  87   2                      case 2:buf=buf+cmdLen[2];len=len-cmdLen[2];break;
+  88   2                      default:UartWrite("bad command.\r\n",sizeof("bad command.\r\n")-1);break;
+  89   2              }
+  90   1              
+  91   1              buf[len]='\0';
+  92   1              LcdShowStr(0,0,buf);
+  93   1              i=len;
+  94   1              if(i<16){
+  95   2                      LcdAreaClear(i,0,16-i);
+  96   2              }
+  97   1              
+  98   1              buf[len++]='\r';
+  99   1              buf[len++]='\n';
+ 100   1              UartWrite(buf,len);     
+ 101   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    485    ----
+   CONSTANT SIZE    =     49    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2      22
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
