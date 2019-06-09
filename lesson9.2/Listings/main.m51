@@ -1,0 +1,228 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    06/09/2019  23:51:24  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\DEV\PROGRAM\51KEIL9\C51\BIN\BL51.EXE .\Objects\STARTUP.obj, .\Objects\main.obj TO .\Objects\main PRINT (.\Listings\ma
+>> in.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (?C_STARTUP)
+  .\Objects\main.obj (MAIN)
+  C:\DEV\PROGRAM\51KEIL9\C51\LIB\C51S.LIB (?C_INIT)
+  C:\DEV\PROGRAM\51KEIL9\C51\LIB\C51S.LIB (?C?IMUL)
+  C:\DEV\PROGRAM\51KEIL9\C51\LIB\C51S.LIB (?C?SLCMP)
+
+
+LINK MAP OF MODULE:  .\Objects\main (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         ?DT?MAIN
+            DATA    000AH     0001H     UNIT         _DATA_GROUP_
+                    000BH     0015H                  *** GAP ***
+            BIT     0020H.0   0000H.2   UNIT         ?BI?MAIN
+                    0020H.2   0000H.6                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     00B2H     UNIT         ?PR?PLAYMUSIC?MAIN
+            CODE    00C0H     008CH     UNIT         ?C_C51STARTUP
+            CODE    014CH     0078H     UNIT         ?CO?MAIN
+            CODE    01C4H     0028H     UNIT         ?C?LIB_CODE
+            CODE    01ECH     0021H     UNIT         ?PR?MAIN?MAIN
+            CODE    020DH     0011H     UNIT         ?PR?CONFIGTIMER0?MAIN
+            CODE    021EH     0011H     UNIT         ?PR?INTERRUPTTIMER0?MAIN
+            CODE    022FH     000BH     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\main (?C_STARTUP)
+
+
+SEGMENT                            DATA_GROUP 
+  +--> CALLED SEGMENT            START    LENGTH
+------------------------------------------------
+?C_C51STARTUP                    -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                    -----    -----
+  +--> ?PR?CONFIGTIMER0?MAIN
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/09/2019  23:51:24  PAGE 2
+
+
+  +--> ?PR?PLAYMUSIC?MAIN
+
+?PR?PLAYMUSIC?MAIN               000AH    0001H
+  +--> ?CO?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:00C0H         SEGMENT       ?C_C51STARTUP
+  I:0021H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:00C3H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:00C0H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:00C0H         LINE#         133
+  C:00C2H         LINE#         134
+  C:00C3H         LINE#         135
+  C:00C4H         LINE#         136
+  C:00C6H         LINE#         185
+  C:00C9H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  B:0020H.0       PUBLIC        tmflag
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  C:021EH         PUBLIC        InterruptTimer0
+  D:00A8H         PUBLIC        IE
+  C:020DH         PUBLIC        ConfigTimer0
+  D:00B8H         PUBLIC        IP
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/09/2019  23:51:24  PAGE 3
+
+
+  C:000EH         PUBLIC        PlayMusic
+  D:0008H         PUBLIC        T0RH
+  D:0009H         PUBLIC        T0RL
+  C:01ECH         PUBLIC        main
+  C:014CH         PUBLIC        NoteFreq
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  B:00A8H.1       PUBLIC        ET0
+  B:0080H.0       PUBLIC        BUZZ
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  B:0088H.4       PUBLIC        TR0
+  D:00C8H         PUBLIC        T2CON
+  B:0020H.1       PUBLIC        enable
+  C:0168H         PUBLIC        NoteReload
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          MAIN
+  -------         DO            
+  D:0082H         SYMBOL        i
+  -------         ENDDO         
+  C:01ECH         LINE#         36
+  C:01ECH         LINE#         38
+  C:01EEH         LINE#         39
+  C:01F1H         LINE#         40
+  C:01F1H         LINE#         41
+  C:01F4H         LINE#         42
+  -------         ENDPROC       MAIN
+  -------         PROC          CONFIGTIMER0
+  C:020DH         LINE#         46
+  C:020DH         LINE#         47
+  C:0210H         LINE#         48
+  C:0213H         LINE#         49
+  C:0216H         LINE#         50
+  C:0219H         LINE#         51
+  C:021BH         LINE#         52
+  C:021DH         LINE#         53
+  -------         ENDPROC       CONFIGTIMER0
+  -------         PROC          INTERRUPTTIMER0
+  C:021EH         LINE#         55
+  C:021EH         LINE#         56
+  C:0221H         LINE#         57
+  C:0224H         LINE#         58
+  C:0226H         LINE#         59
+  C:0229H         LINE#         60
+  C:022BH         LINE#         61
+  C:022CH         LINE#         62
+  C:022EH         LINE#         63
+  C:022EH         LINE#         64
+  -------         ENDPROC       INTERRUPTTIMER0
+  -------         PROC          PLAYMUSIC
+  -------         DO            
+  D:0001H         SYMBOL        beat
+  D:000AH         SYMBOL        note
+  D:0002H         SYMBOL        time
+  D:0004H         SYMBOL        beatTime
+  D:0006H         SYMBOL        soundTime
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/09/2019  23:51:24  PAGE 4
+
+
+  C:0184H         SYMBOL        TwoTigerNote
+  C:01A4H         SYMBOL        TwotTigerBeat
+  -------         ENDDO         
+  C:000EH         LINE#         66
+  C:000EH         LINE#         69
+  C:0011H         LINE#         70
+  C:0013H         LINE#         71
+  C:0015H         LINE#         80
+  C:0023H         LINE#         81
+  C:0026H         LINE#         82
+  C:0028H         LINE#         83
+  C:002CH         LINE#         84
+  C:0034H         LINE#         85
+  C:0043H         LINE#         86
+  C:0055H         LINE#         87
+  C:0081H         LINE#         88
+  C:0092H         LINE#         89
+  C:0094H         LINE#         90
+  C:0099H         LINE#         91
+  C:009CH         LINE#         92
+  C:00A3H         LINE#         93
+  C:00A6H         LINE#         94
+  C:00A7H         LINE#         95
+  C:00AAH         LINE#         96
+  C:00AFH         LINE#         97
+  C:00BAH         LINE#         98
+  C:00BCH         LINE#         99
+  C:00BCH         LINE#         100
+  C:00BCH         LINE#         101
+  C:00BCH         LINE#         102
+  C:00BFH         LINE#         103
+  -------         ENDPROC       PLAYMUSIC
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?IMUL
+  C:01C4H         PUBLIC        ?C?IMUL
+  -------         ENDMOD        ?C?IMUL
+
+  -------         MODULE        ?C?SLCMP
+  C:01D6H         PUBLIC        ?C?SLCMP
+  -------         ENDMOD        ?C?SLCMP
+
+Program Size: data=12.2 xdata=0 code=562
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
