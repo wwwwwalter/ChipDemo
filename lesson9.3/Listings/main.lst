@@ -1,0 +1,84 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2019 01:42:44 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define heart 24576000
+   3          #define LEN 28
+   4          sbit buzz=P1^0;
+   5          
+   6          unsigned char count=0;
+   7          unsigned char T0RH=0;
+   8          unsigned char T0RL=0;
+   9          float code NoteFreq[] = {
+  10              523.251, 587.33, 659.255, 698.456, 783.991, 880, 987.767,
+  11              1046.502, 1174.659, 1318.52, 1396.913, 1567.982, 1760, 1975.533,
+  12                  2093.004, 2349.318, 2637.02, 2793.826, 3135.437, 3520, 3951.066,
+  13                  4186.009, 4698.636, 5274.04, 5587.652, 6270.874, 7040, 7902.132
+  14          };
+  15          unsigned int NoteReload[LEN];
+  16          void PlayMusic(unsigned int freq);
+  17          void reload(unsigned int *noteReload,float *noteFreq,unsigned char len);
+  18          
+  19          
+  20          
+  21          void main(void){
+  22   1              unsigned int i=0;
+  23   1              reload(NoteReload,NoteFreq,LEN);
+  24   1              
+  25   1              EA=1;
+  26   1              TH0=0xff;
+  27   1              TL0=0xfe;
+  28   1              TMOD&=0xf0;
+  29   1              TMOD|=0x01;
+  30   1              ET0=1;
+  31   1              TR0=1;
+  32   1              
+  33   1              while(1){
+  34   2                      PlayMusic(NoteReload[count++]);
+  35   2                      for(i=0;i<40000;i++);
+  36   2                      if(count>=LEN){
+  37   3                              count=0;
+  38   3                      }
+  39   2              }
+  40   1      }
+  41          
+  42          void PlayMusic(unsigned int noteReload){
+  43   1              T0RH=(unsigned char)(noteReload>>8);
+  44   1              T0RL=(unsigned char)noteReload;
+  45   1      }
+  46          
+  47          void InterruptTimer0() interrupt 1{
+  48   1              TH0=T0RH;
+  49   1              TL0=T0RL;
+  50   1              buzz=~buzz;
+  51   1      }
+  52          
+  53          void reload(unsigned int *noteReload,float *noteFreq,unsigned char len){
+  54   1              unsigned char i=0;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2019 01:42:44 PAGE 2   
+
+  55   1              for(i=0;i<len;i++){
+  56   2                      noteReload[i]=65536-heart/12/(noteFreq[i]*2);
+  57   2              }
+  58   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    243    ----
+   CONSTANT SIZE    =    112    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     59      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
