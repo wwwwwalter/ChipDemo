@@ -1,0 +1,96 @@
+C51 COMPILER V9.60.0.0   LCD1602                                                           06/10/2019 17:17:32 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN .\Objects\lcd1602.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE lcd1602.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(
+                    -.\Listings\lcd1602.lst) OBJECT(.\Objects\lcd1602.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          #define LCD_DB P0
+   4          
+   5          sbit LCD_RS=P2^6;
+   6          sbit LCD_RW=P2^5;
+   7          sbit LCD_E=P2^7;
+   8          
+   9          void LcdInit();
+  10          void LcdWaitReady();
+  11          void LcdWriteCmd(unsigned char cmd);
+  12          void LcdWriteDat(unsigned char cmd);
+  13          void LcdSetCursor(unsigned char x,unsigned char y);
+  14          void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
+  15          
+  16          
+  17          void LcdInit(){
+  18   1              LcdWriteCmd(0x38);
+  19   1              LcdWriteCmd(0x0c);
+  20   1              LcdWriteCmd(0x06);
+  21   1              LcdWriteCmd(0x01);
+  22   1      }
+  23          
+  24          void LcdWaitReady(){
+  25   1              unsigned char sta;
+  26   1              LCD_DB=0xff;
+  27   1              LCD_RS=0;
+  28   1              LCD_RW=1;
+  29   1              do{
+  30   2                      LCD_E=1;
+  31   2                      sta=LCD_DB;
+  32   2                      LCD_E=0;
+  33   2              }while(sta&0x80);
+  34   1      }
+  35          
+  36          void LcdWriteCmd(unsigned char cmd){
+  37   1              LcdWaitReady();
+  38   1              LCD_RS=0;
+  39   1              LCD_RW=0;
+  40   1              LCD_DB=cmd;
+  41   1              LCD_E=1;
+  42   1              LCD_E=0;
+  43   1      }
+  44          
+  45          void LcdWriteDat(unsigned char dat){
+  46   1              LcdWaitReady();
+  47   1              LCD_RS=1;
+  48   1              LCD_RW=0;
+  49   1              LCD_DB=dat;
+  50   1              LCD_E=1;
+  51   1              LCD_E=0;
+  52   1      }
+  53          
+  54          void LcdSetCursor(unsigned char x,unsigned char y){
+C51 COMPILER V9.60.0.0   LCD1602                                                           06/10/2019 17:17:32 PAGE 2   
+
+  55   1              unsigned char addr;
+  56   1              if(y==0){
+  57   2                      addr=0x00+x;
+  58   2              }else{
+  59   2                      addr=0x40+x;
+  60   2              }
+  61   1              LcdWriteCmd(addr|0x80);
+  62   1      }
+  63          
+  64          void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str){
+  65   1              LcdSetCursor(x,y);
+  66   1              while(*str!='\0'){
+  67   2                      LcdWriteDat(*str);
+  68   2                      str++;
+  69   2              }
+  70   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    110    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

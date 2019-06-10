@@ -1,0 +1,187 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2019 17:17:32 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          sbit BUZZ=P1^1;
+   4          bit flagBuzzOn = 0;
+   5          unsigned char T0RH=0;
+   6          unsigned char T0RL=0;
+   7          unsigned char regGroup[5];
+   8          
+   9          void ConfigTimer0(unsigned int ms);
+  10          void UartAction(unsigned char *buf,unsigned char len);
+  11          void Deal0x03(unsigned char *buf,unsigned char len);
+  12          void Deal0x06(unsigned char *buf,unsigned char len);
+  13          void Deal0x80(unsigned char *buf,unsigned char len);
+  14          
+  15          extern void LcdInit();
+  16          extern void UartDriver();
+  17          extern void ConfigUART(unsigned int baud);
+  18          extern void UartRxMonitor(unsigned char ms);
+  19          extern void UartWrite(unsigned char *buf,unsigned char len);
+  20          extern unsigned int GetCRC16(unsigned char *ptr,unsigned char len);
+  21          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
+  22          
+  23          void main(void){
+  24   1              EA=1;
+  25   1              ConfigTimer0(1);
+  26   1              ConfigUART(9600);
+  27   1              LcdInit();
+  28   1              
+  29   1              while(1){
+  30   2                      UartDriver();
+  31   2              }       
+  32   1      }
+  33          
+  34          void ConfigTimer0(unsigned int ms){
+  35   1              unsigned long tmp;
+  36   1              tmp=24576000/12/1000*ms;
+  37   1              tmp=65536-tmp;
+  38   1              tmp+=33;
+  39   1              T0RH=(unsigned char)(tmp>>8);
+  40   1              T0RL=(unsigned char)tmp;
+  41   1              TMOD&=0xf0;
+  42   1              TMOD|=0x01;
+  43   1              TH0=T0RH;
+  44   1              TL0=T0RL;
+  45   1              ET0=1;
+  46   1              TR0=1;
+  47   1      }
+  48          
+  49          void InterruptTimer0() interrupt 1{
+  50   1              TH0=T0RH;
+  51   1              TL0=T0RL;
+  52   1              if(flagBuzzOn){
+  53   2                      BUZZ=~BUZZ;
+  54   2              }else{
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2019 17:17:32 PAGE 2   
+
+  55   2                      BUZZ=1;
+  56   2              }
+  57   1              UartRxMonitor(1);
+  58   1      }
+  59          void UartAction(unsigned char *buf,unsigned char len){  
+  60   1              
+  61   1              unsigned int crc;
+  62   1              unsigned char crch,crcl;
+  63   1              
+  64   1              if(buf[0]!=0x01){
+  65   2                      return;
+  66   2              }
+  67   1              
+  68   1              crc=GetCRC16(buf,len-2);
+  69   1              crch=crc>>8;
+  70   1              crcl=crc&0xff;
+  71   1              if((buf[len-2]!=crch)||(buf[len-1]!=crcl)){
+  72   2                      return;
+  73   2              }
+  74   1              
+  75   1              switch(buf[1]){
+  76   2                      case 0x03:
+  77   2                              Deal0x03(buf,len);
+  78   2                              break;
+  79   2                      case 0x06:
+  80   2                              Deal0x06(buf,len);
+  81   2                              break;
+  82   2                      default:
+  83   2                              Deal0x80(buf,len);
+  84   2                              break;
+  85   2              }
+  86   1              crc=GetCRC16(buf,len);
+  87   1              buf[len++]=crc>>8;
+  88   1              buf[len++]=crc&0xff;
+  89   1              UartWrite(buf,len);
+  90   1              
+  91   1      }
+  92          
+  93          void Deal0x03(unsigned char *buf,unsigned char len){
+  94   1              unsigned char i;
+  95   1              unsigned char cnt;
+  96   1              
+  97   1              if((buf[2]==0x00)&&(buf[3]<=0x05)){
+  98   2                      if(buf[3]<=0x04){
+  99   3                              i=buf[3];
+ 100   3                              cnt=buf[5];
+ 101   3                              buf[2]=cnt*2;
+ 102   3                              len=3;
+ 103   3                              while(cnt--){
+ 104   4                                      buf[len++]=0x00;
+ 105   4                                      buf[len++]=regGroup[i++];
+ 106   4                              }
+ 107   3                      }else{
+ 108   3                              buf[2]=2;
+ 109   3                              buf[3]=0x00;
+ 110   3                              buf[4]=flagBuzzOn;
+ 111   3                              len=5;
+ 112   3                      }
+ 113   2              }else{
+ 114   2                      buf[1]=buf[1]|0x80;
+ 115   2                      buf[2]=0x02;
+ 116   2                      len=3;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2019 17:17:32 PAGE 3   
+
+ 117   2              }
+ 118   1      }
+ 119          
+ 120          void Deal0x06(unsigned char *buf,unsigned char len){    
+ 121   1              unsigned char i;
+ 122   1              unsigned char cnt;
+ 123   1              unsigned char str[4];
+ 124   1              
+ 125   1              if((buf[2]==0x00)&&(buf[3]<=0x05)){
+ 126   2                      if(buf[3]<=0x04){
+ 127   3                              i=buf[3];
+ 128   3                              regGroup[i]=buf[5];
+ 129   3                              cnt=regGroup[i]>>4;//high
+ 130   3                              if(cnt>=0x0A){
+ 131   4                                      str[0]=cnt-0x0A+'A';
+ 132   4                              }else{
+ 133   4                                      str[0]=cnt+'0';
+ 134   4                              }
+ 135   3                              cnt=regGroup[i]&0x0f;//low
+ 136   3                              if(cnt>=0x0A){
+ 137   4                                      str[1]=cnt-0x0A+'A';
+ 138   4                              }else{
+ 139   4                                      str[1]=cnt+'0';
+ 140   4                              }
+ 141   3                              str[2]='\0';
+ 142   3                              LcdShowStr(i*3,0,str);
+ 143   3                      }else{
+ 144   3                              flagBuzzOn=(bit)buf[5];
+ 145   3                      }
+ 146   2                      len-=2;
+ 147   2              }else{
+ 148   2                      buf[1]=buf[1]|0x80;
+ 149   2                      buf[2]=0x02;
+ 150   2                      len=3;
+ 151   2              }
+ 152   1      }
+ 153          
+ 154          void Deal0x80(unsigned char *buf,unsigned char len){
+ 155   1              buf[1]|=0x80;
+ 156   1              buf[2]=0x01;
+ 157   1              len=3;
+ 158   1      }
+ 159          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    785    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7      25
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

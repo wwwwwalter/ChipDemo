@@ -1,0 +1,7 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\crc16.obj",
+".\Objects\lcd1602.obj",
+".\Objects\rs485.obj" 
+TO ".\Objects\modbus" 
+PRINT(".\Listings\modbus.m51") RAMSIZE(256) 

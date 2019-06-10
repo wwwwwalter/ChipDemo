@@ -1,0 +1,138 @@
+C51 COMPILER V9.60.0.0   RS485                                                             06/10/2019 17:17:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE RS485
+OBJECT MODULE PLACED IN .\Objects\rs485.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE rs485.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\rs485.lst) OBJECT(.\Objects\rs485.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <intrins.h>
+   3          
+   4          sbit DIR=P1^0;
+   5          bit flagFrame=0;
+   6          bit flagTxd=0;
+   7          unsigned char T1RH=0;
+   8          unsigned char T1RL=0;
+   9          unsigned char cntRxd=0;
+  10          unsigned char pdata bufRxd[64];
+  11          
+  12          void UartDriver();
+  13          void Delay10us(unsigned char t);
+  14          void ConfigUART(unsigned int baud);
+  15          void UartRxMonitor(unsigned char ms);
+  16          void UartWrite(unsigned char *buf,unsigned char len);
+  17          unsigned char UartRead(unsigned char *buf,unsigned char len);
+  18          extern void UartAction(unsigned char *buf,unsigned char len);
+  19          
+  20          void ConfigUART(unsigned int baud){
+  21   1              DIR=0;
+  22   1              SCON=0x50;
+  23   1              TMOD&=0x0f;
+  24   1              TMOD|=0x20;
+  25   1              TH1=256-(24576000/12/32)/baud;
+  26   1              TL1=TH1;
+  27   1              ET1=0;
+  28   1              ES=1;
+  29   1              TR1=1;
+  30   1      }
+  31          
+  32          void InterruptUART() interrupt 4{
+  33   1              if(RI){
+  34   2                      RI=0;
+  35   2                      if(cntRxd<sizeof(bufRxd)){
+  36   3                              bufRxd[cntRxd++]=SBUF;
+  37   3                      }
+  38   2              }
+  39   1              if(TI){
+  40   2                      TI=0;
+  41   2                      flagTxd=1;
+  42   2              }
+  43   1      }
+  44          
+  45          void Delay10us(unsigned char t){
+  46   1               do {
+  47   2              _nop_();
+  48   2              _nop_();
+  49   2              _nop_();
+  50   2              _nop_();
+  51   2              _nop_();
+  52   2              _nop_();
+  53   2              _nop_();
+  54   2              _nop_();
+C51 COMPILER V9.60.0.0   RS485                                                             06/10/2019 17:17:33 PAGE 2   
+
+  55   2          } while (--t);
+  56   1      }
+  57          
+  58          void UartWrite(unsigned char *buf,unsigned char len){
+  59   1              DIR=1;
+  60   1              while(len--){
+  61   2                      flagTxd=0;
+  62   2                      SBUF=*buf++;
+  63   2                      while(!flagTxd);
+  64   2              }
+  65   1              Delay10us(5);
+  66   1              DIR=0;
+  67   1      }
+  68          
+  69          unsigned char UartRead(unsigned char *buf,unsigned char len){
+  70   1              unsigned char i;
+  71   1              if(len>cntRxd){
+  72   2                      len=cntRxd;
+  73   2              }
+  74   1              for(i=0;i<len;i++){
+  75   2                      *buf++=bufRxd[i];
+  76   2              }
+  77   1              cntRxd=0;
+  78   1              return len;
+  79   1      }
+  80          
+  81          void UartRxMonitor(unsigned char ms){
+  82   1              static unsigned char cntbkp=0;
+  83   1              static unsigned char idletime=0;
+  84   1              if(cntRxd>0){
+  85   2                      if(cntbkp!=cntRxd){
+  86   3                              cntbkp=cntRxd;
+  87   3                              idletime=0;
+  88   3                      }else{
+  89   3                              if(idletime<30){
+  90   4                                      idletime+=ms;
+  91   4                                      if(idletime>=30){
+  92   5                                              flagFrame=1;
+  93   5                                      }
+  94   4                              }
+  95   3                      }
+  96   2              }else{
+  97   2                      cntbkp=0;
+  98   2              }
+  99   1      }
+ 100          
+ 101          void UartDriver(){
+ 102   1              unsigned char len;
+ 103   1              unsigned char pdata buf[40];
+ 104   1              if(flagFrame){
+ 105   2                      flagFrame=0;
+ 106   2                      len=UartRead(buf,sizeof(buf)-2);
+ 107   2                      UartAction(buf,len);
+ 108   2              }
+ 109   1      }
+ 110          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    292    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   RS485                                                             06/10/2019 17:17:33 PAGE 3   
+
+   PDATA SIZE       =     64      40
+   DATA SIZE        =      5       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
