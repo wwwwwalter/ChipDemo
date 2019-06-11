@@ -45,8 +45,10 @@ bit I2CWrite(unsigned char dat){
 		I2CDelay();
 		SCL=0;
 	}
+	SDA=1;
 	I2CDelay();
 	SCL=1;
+	I2CDelay();
 	ack=SDA;
 	I2CDelay();
 	SCL=0;
