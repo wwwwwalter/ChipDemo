@@ -1,0 +1,72 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2019 12:23:02 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          extern void LcdInit();
+   4          extern void LcdShowStr(unsigned x,unsigned y,unsigned char *str);
+   5          extern void I2CStart();
+   6          extern void I2CStop();
+   7          extern unsigned char I2CReadNAK();
+   8          extern bit I2CWrite(unsigned char addr);
+   9          
+  10          unsigned char EEReadByte(unsigned char addr);
+  11          void EEWriteByte(unsigned char addr,unsigned char dat);
+  12          
+  13          void main(void){
+  14   1              unsigned char dat;
+  15   1              unsigned char str[10];
+  16   1              LcdInit();
+  17   1              dat=EEReadByte(0x03);
+  18   1              str[0]=(dat/100)+'0';
+  19   1              str[1]=(dat/10%10)+'0';
+  20   1              str[2]=(dat%10)+'0';
+  21   1              str[3]='\0';
+  22   1              LcdShowStr(0,0,str);
+  23   1              dat++;
+  24   1              EEWriteByte(0x03,dat);
+  25   1              while(1);
+  26   1      }
+  27          
+  28          unsigned char EEReadByte(unsigned char addr){
+  29   1              unsigned char dat;
+  30   1              I2CStart();
+  31   1              I2CWrite(0x50<<1);
+  32   1              I2CWrite(addr);
+  33   1              I2CStart();
+  34   1              I2CWrite((0x50<<1)|0x01);
+  35   1              dat=I2CReadNAK();
+  36   1              I2CStop();
+  37   1              return dat;
+  38   1      }
+  39          
+  40          void EEWriteByte(unsigned char addr,unsigned char dat){
+  41   1              I2CStart();
+  42   1              I2CWrite(0x50<<1);
+  43   1              I2CWrite(addr);
+  44   1              I2CWrite(dat);
+  45   1              I2CStop();
+  46   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    133    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      15
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2019 12:23:02 PAGE 2   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
