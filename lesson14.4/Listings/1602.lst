@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   1602                                                              06/12/2019 22:13:46 PAGE 1   
+C51 COMPILER V9.60.0.0   1602                                                              06/12/2019 22:07:04 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE 1602
@@ -62,7 +62,7 @@ line level    source
   52          
   53          void LcdSetCursor(unsigned char x,unsigned char y){
   54   1              unsigned char addr;
-C51 COMPILER V9.60.0.0   1602                                                              06/12/2019 22:13:46 PAGE 2   
+C51 COMPILER V9.60.0.0   1602                                                              06/12/2019 22:07:04 PAGE 2   
 
   55   1              if(y==0){
   56   2                      addr=0x00+x;

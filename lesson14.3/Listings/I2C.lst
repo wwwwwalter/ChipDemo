@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 00:57:50 PAGE 1   
+C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 22:24:01 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE I2C
@@ -10,133 +10,130 @@ line level    source
 
    1          #include <reg52.h>
    2          #include <intrins.h>
-   3          #define I2CDelay() {unsigned char a,b;for(b=1;b>0;b--){for(a=2;a>0;a--);}}
+   3          
    4          
    5          sbit I2C_SCL=P2^1;
    6          sbit I2C_SDA=P2^0;
    7          
-   8          void I2CStart();
-   9          void I2CStop();
-  10          unsigned char I2CReadNAK();
-  11          unsigned char I2CReadACK();
-  12          bit I2CWrite(unsigned char dat);
-  13          
-  14          extern void LcdShowStr(unsigned char x,unsigned char y,unsigned char *str);
-  15          extern void MemToStr(unsigned char *str,unsigned char *src,unsigned char len);
-  16          
-  17          void I2CStart(){
-  18   1              I2C_SDA=1;
-  19   1              I2CDelay();
-  20   1              I2C_SCL=1;
-  21   1              I2CDelay();
-  22   1              I2C_SDA=0;
-  23   1              I2CDelay();
-  24   1              I2C_SCL=0;
+   8          void I2CDelay();
+   9          void I2CStart();
+  10          void I2CStop();
+  11          unsigned char I2CReadNAK();
+  12          unsigned char I2CReadACK();
+  13          bit I2CWrite(unsigned char dat);
+  14          
+  15          void I2CDelay(){
+  16   1              unsigned char a;
+  17   1              unsigned char b;
+  18   1              for(b=1;b>0;b--){
+  19   2                      for(a=2;a>0;a--);
+  20   2              }
+  21   1      }
+  22          
+  23          void I2CStart(){
+  24   1              I2C_SDA=1;
   25   1              I2CDelay();
-  26   1      }
-  27          
-  28          void I2CStop(){
-  29   1              I2C_SCL=0;
-  30   1              I2CDelay();
-  31   1              I2C_SDA=0;
-  32   1              I2CDelay();
-  33   1              I2C_SCL=1;
-  34   1              I2CDelay();
-  35   1              I2C_SDA=1;
+  26   1              I2C_SCL=1;
+  27   1              I2CDelay();
+  28   1              I2C_SDA=0;
+  29   1              I2CDelay();
+  30   1              I2C_SCL=0;
+  31   1              I2CDelay();
+  32   1      }
+  33          
+  34          void I2CStop(){
+  35   1              I2C_SCL=0;
   36   1              I2CDelay();
-  37   1      }
-  38          
-  39          bit I2CWrite(unsigned char dat){
-  40   1              bit ack;
-  41   1              unsigned char mask;
-  42   1              
-  43   1              for(mask==0x80;mask!=0;mask>>=1){
-  44   2                      if((mask&dat)==0){
-  45   3                              I2C_SDA=0;
-  46   3                      }else{
-  47   3                              I2C_SDA=1;
-  48   3                      }
-  49   2                      I2CDelay();
-  50   2                      I2C_SCL=1;
-  51   2                      I2CDelay();
-  52   2                      I2C_SCL=0;
-  53   2              }
-  54   1              I2C_SDA=1;
-C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 00:57:50 PAGE 2   
+  37   1              I2C_SDA=0;
+  38   1              I2CDelay();
+  39   1              I2C_SCL=1;
+  40   1              I2CDelay();
+  41   1              I2C_SDA=1;
+  42   1              I2CDelay();
+  43   1      }
+  44          
+  45          bit I2CWrite(unsigned char dat){
+  46   1              bit ack;
+  47   1              unsigned char mask;
+  48   1              
+  49   1              for(mask=0x80;mask!=0;mask>>=1){
+  50   2                      if((mask&dat)==0){
+  51   3                              I2C_SDA=0;
+  52   3                      }else{
+  53   3                              I2C_SDA=1;
+  54   3                      }
+C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 22:24:01 PAGE 2   
 
-  55   1              I2CDelay();
-  56   1              I2C_SCL=1;
-  57   1              I2CDelay();
-  58   1              while(I2C_SDA){
-  59   2                      static unsigned char count=0;
-  60   2                      unsigned long i=0;
-  61   2                      unsigned char str[4];
-  62   2                      for(i=0;i<30000;++i);
-  63   2                      count++;
-  64   2                      MemToStr(str,&count,1);
-  65   2                      LcdShowStr(0,1,str);
-  66   2              }
-  67   1              ack=I2C_SDA;
-  68   1              I2CDelay();
-  69   1              I2C_SCL=0;
-  70   1              return (~ack);  
-  71   1      }
-  72          
-  73          unsigned char I2CReadNAK(){
-  74   1              unsigned char mask;
-  75   1              unsigned char dat;
-  76   1              I2C_SDA=1;
-  77   1              for(mask=0x80;mask!=0;mask>>=1){
-  78   2                      I2CDelay();
-  79   2                      I2C_SCL=1;
-  80   2                      if(I2C_SDA==0){
-  81   3                              dat&=~mask;
-  82   3                      }else{
-  83   3                              dat|=mask;
-  84   3                      }
-  85   2                      I2CDelay();
-  86   2                      I2C_SCL=0;
-  87   2              }
-  88   1              I2C_SDA=1;
-  89   1              I2CDelay();
-  90   1              I2C_SCL=1;
-  91   1              I2CDelay();
-  92   1              I2C_SCL=0;
-  93   1              return dat;
-  94   1      }
-  95          
-  96          unsigned char I2CReadACK(){
-  97   1              unsigned char mask;
-  98   1              unsigned char dat;
-  99   1              I2C_SDA=1;
- 100   1              for(mask=0x80;mask!=0;mask>>=1){
- 101   2                      I2CDelay();
- 102   2                      I2C_SCL=1;
- 103   2                      if(I2C_SDA==0){
- 104   3                              dat&=~mask;
- 105   3                      }else{
- 106   3                              dat|=mask;
- 107   3                      }
- 108   2                      I2CDelay();
- 109   2                      I2C_SCL=0;
- 110   2              }
- 111   1              I2C_SDA=0;
- 112   1              I2CDelay();
- 113   1              I2C_SCL=1;
- 114   1              I2CDelay();
- 115   1              I2C_SCL=0;
- 116   1              return dat;
-C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 00:57:50 PAGE 3   
+  55   2                      I2CDelay();
+  56   2                      I2C_SCL=1;
+  57   2                      I2CDelay();
+  58   2                      I2C_SCL=0;
+  59   2              }
+  60   1              I2C_SDA=1;
+  61   1              I2CDelay();
+  62   1              I2C_SCL=1;
+  63   1              I2CDelay();
+  64   1              ack=I2C_SDA;
+  65   1              I2CDelay();
+  66   1              I2C_SCL=0;
+  67   1              return (~ack);  
+  68   1      }
+  69          
+  70          unsigned char I2CReadNAK(){
+  71   1              unsigned char mask;
+  72   1              unsigned char dat;
+  73   1              I2C_SDA=1;
+  74   1              for(mask=0x80;mask!=0;mask>>=1){
+  75   2                      I2CDelay();
+  76   2                      I2C_SCL=1;
+  77   2                      if(I2C_SDA==0){
+  78   3                              dat&=~mask;
+  79   3                      }else{
+  80   3                              dat|=mask;
+  81   3                      }
+  82   2                      I2CDelay();
+  83   2                      I2C_SCL=0;
+  84   2              }
+  85   1              I2C_SDA=1;
+  86   1              I2CDelay();
+  87   1              I2C_SCL=1;
+  88   1              I2CDelay();
+  89   1              I2C_SCL=0;
+  90   1              return dat;
+  91   1      }
+  92          
+  93          unsigned char I2CReadACK(){
+  94   1              unsigned char mask;
+  95   1              unsigned char dat;
+  96   1              I2C_SDA=1;
+  97   1              for(mask=0x80;mask!=0;mask>>=1){
+  98   2                      I2CDelay();
+  99   2                      I2C_SCL=1;
+ 100   2                      if(I2C_SDA==0){
+ 101   3                              dat&=~mask;
+ 102   3                      }else{
+ 103   3                              dat|=mask;
+ 104   3                      }
+ 105   2                      I2CDelay();
+ 106   2                      I2C_SCL=0;
+ 107   2              }
+ 108   1              I2C_SDA=0;
+ 109   1              I2CDelay();
+ 110   1              I2C_SCL=1;
+ 111   1              I2CDelay();
+ 112   1              I2C_SCL=0;
+ 113   1              return dat;
+ 114   1      }
 
- 117   1      }
 
+C51 COMPILER V9.60.0.0   I2C                                                               06/12/2019 22:24:01 PAGE 3   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    985    ----
+   CODE SIZE        =    195    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      1      17
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----       1
 END OF MODULE INFORMATION.

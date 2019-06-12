@@ -10,16 +10,16 @@ void MemToStr(unsigned char *str,unsigned char *src,unsigned char len);
 void main(void){
 	unsigned char i;
 	unsigned char buf[5];
-	unsigned char str[20];
-	
-	LcdInit();
-	E2Read(buf,0xff,sizeof(buf));
-	MemToStr(str,buf,sizeof(buf));
-	LcdShowStr(0,0,str);
+	unsigned char str[20];	
+	LcdInit();	
 	for(i=0;i<sizeof(buf);i++){
 		buf[i]=buf[i]+1+i;
 	}
-	E2Write(buf,0x8E,sizeof(buf));
+	E2Write(buf,0x0e,sizeof(buf));
+	
+	E2Read(buf,0x0e,sizeof(buf));
+	MemToStr(str,buf,sizeof(buf));
+	LcdShowStr(0,0,str);
 	while(1);
 }
 

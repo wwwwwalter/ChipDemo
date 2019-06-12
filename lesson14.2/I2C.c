@@ -34,7 +34,7 @@ bit I2CWrite(unsigned char dat){
 	bit ack;
 	unsigned char mask;
 	
-	for(mask==0x80;mask!=0;mask>>=1){
+	for(mask=0x80;mask!=0;mask>>=1){
 		if((mask&dat)==0){
 			SDA=0;
 		}else{
