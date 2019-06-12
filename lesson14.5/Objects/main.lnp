@@ -1,0 +1,8 @@
+".\Objects\STARTUP.obj",
+".\Objects\1602.obj",
+".\Objects\eeprom.obj",
+".\Objects\I2C.obj",
+".\Objects\main.obj",
+".\Objects\uart.obj" 
+TO ".\Objects\main" 
+PRINT(".\Listings\main.m51") RAMSIZE(256) 
