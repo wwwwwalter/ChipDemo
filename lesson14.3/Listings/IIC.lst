@@ -1,0 +1,103 @@
+C51 COMPILER V9.60.0.0   IIC                                                               06/12/2019 11:34:09 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE IIC
+OBJECT MODULE PLACED IN .\Objects\IIC.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE IIC.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
+                    -stings\IIC.lst) OBJECT(.\Objects\IIC.obj)
+
+line level    source
+
+   1          #include<reg52.h>
+   2          
+   3          sbit I2C_SCL=P2^1;
+   4          sbit I2C_SDA=P2^0;
+   5          typedef unsigned char uchar;
+   6          
+   7          void I2C_Delay10us();
+   8          void I2C_Start();
+   9          void I2C_Stop();
+  10          uchar I2C_SendByte(uchar dat, uchar ack);
+  11          uchar I2C_ReadByte();
+  12          
+  13          void I2C_Delay10us(){
+  14   1              uchar a, b;
+  15   1              for(b=1; b>0; b--)      {
+  16   2                      for(a=2; a>0; a--);
+  17   2              }
+  18   1      }
+  19          
+  20          void I2C_Start(){
+  21   1              I2C_SDA = 1;
+  22   1              I2C_Delay10us();
+  23   1              I2C_SCL = 1;
+  24   1              I2C_Delay10us();
+  25   1              I2C_SDA = 0;
+  26   1              I2C_Delay10us();
+  27   1              I2C_SCL = 0;                    
+  28   1              I2C_Delay10us();                 
+  29   1      }
+  30          
+  31          void I2C_Stop(){
+  32   1              I2C_SDA = 0;
+  33   1              I2C_Delay10us();
+  34   1              I2C_SCL = 1;
+  35   1              I2C_Delay10us();
+  36   1              I2C_SDA = 1;
+  37   1              I2C_Delay10us();                
+  38   1      }
+  39          
+  40          
+  41          uchar I2C_SendByte(uchar dat, uchar ack){
+  42   1              uchar a = 0,b = 0;              
+  43   1              for(a=0; a<8; a++)      {
+  44   2                      I2C_SDA = dat >> 7;
+  45   2                      dat = dat << 1;
+  46   2                      I2C_Delay10us();
+  47   2                      I2C_SCL = 1;
+  48   2                      I2C_Delay10us();
+  49   2                      I2C_SCL = 0;
+  50   2                      I2C_Delay10us();
+  51   2              }
+  52   1      
+  53   1              I2C_SDA = 1;
+  54   1              I2C_Delay10us();
+C51 COMPILER V9.60.0.0   IIC                                                               06/12/2019 11:34:09 PAGE 2   
+
+  55   1              I2C_SCL = 1;
+  56   1              while(I2C_SDA && (ack == 1)){
+  57   2                      b++;
+  58   2                      if(b > 200)      
+  59   2                              I2C_SCL = 0;
+  60   2                              I2C_Delay10us();
+  61   2                              return 0;
+  62   2                      }
+  63   1              }
+  64                  I2C_SCL=0;
+*** ERROR C231 IN LINE 64 OF IIC.c: 'I2C_SCL': redefinition
+*** ERROR C231 IN LINE 64 OF IIC.c: 'I2C_SCL': redefinition
+  65                  I2C_Delay10us();
+*** ERROR C231 IN LINE 65 OF IIC.c: 'I2C_Delay10us': redefinition
+  66                  return 1;               
+*** ERROR C141 IN LINE 66 OF IIC.c: syntax error near 'return', expected 'hdata'
+  67          }
+  68          
+  69          
+  70          uchar I2C_ReadByte(){
+  71   1              uchar a = 0;
+  72   1              uchar dat = 0;
+  73   1              I2C_SDA = 1;            
+  74   1              I2C_Delay10us();
+  75   1              for(a=0; a<8; a++){
+  76   2                      I2C_SCL = 1;
+  77   2                      I2C_Delay10us();
+  78   2                      dat <<= 1;
+  79   2                      dat |= I2C_SDA;
+  80   2                      I2C_Delay10us();
+  81   2                      I2C_SCL = 0;
+  82   2                      I2C_Delay10us();
+  83   2              }
+  84   1              return dat;             
+  85   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  4 ERROR(S)
