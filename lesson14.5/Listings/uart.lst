@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   UART                                                              06/13/2019 01:18:43 PAGE 1   
+C51 COMPILER V9.60.0.0   UART                                                              06/13/2019 17:04:13 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52   1              if(len>cntRxd){
   53   2                      len=cntRxd;
   54   2              }
-C51 COMPILER V9.60.0.0   UART                                                              06/13/2019 01:18:43 PAGE 2   
+C51 COMPILER V9.60.0.0   UART                                                              06/13/2019 17:04:13 PAGE 2   
 
   55   1              for(i=0;i<len;++i){
   56   2                      *buf++=bufRxd[i];

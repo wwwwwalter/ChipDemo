@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    06/13/2019  01:19:29  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    06/13/2019  17:04:13  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\main (?C_STARTUP)
             CODE    0373H     008CH     UNIT         ?C_C51STARTUP
             CODE    03FFH     0086H     UNIT         ?PR?_CONFIGTIMER0?MAIN
             CODE    0485H     006DH     UNIT         ?PR?_TRIMSTRING16?MAIN
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 2
 
 
             CODE    04F2H     0057H     UNIT         ?PR?_E2WRITE?EEPROM
@@ -119,7 +119,7 @@ SEGMENT                            BIT_GROUP          DATA_GROUP          PDATA_
   +--> ?PR?LCDWAITREADY?1602
 
 ?PR?INITSHOWSTR?MAIN            -----    -----      0021H    0011H      -----    -----
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 3
 
 
   +--> ?PR?_E2READ?EEPROM
@@ -179,7 +179,7 @@ SEGMENT                            BIT_GROUP          DATA_GROUP          PDATA_
 ?PR?_LCDAREACLEAR?1602          -----    -----      -----    -----      -----    -----
   +--> ?PR?_LCDSETCURSOR?1602
   +--> ?PR?_LCDWRITEDAT?1602
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 4
 
 
 
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   -------         MODULE        1602
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0080H         PUBLIC        P0
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 5
 
 
   D:0090H         PUBLIC        P1
@@ -299,7 +299,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   C:08E6H         LINE#         45
   C:08E8H         LINE#         46
   C:08EBH         LINE#         47
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 6
 
 
   C:08EDH         LINE#         48
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   D:00C8H         PUBLIC        T2CON
   C:0549H         PUBLIC        _E2Read
   D:00D0H         PUBLIC        PSW
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 7
 
 
   -------         PROC          _E2READ
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   D:00B0H         PUBLIC        P3
   C:0740H         PUBLIC        I2CReadACK
   D:00A8H         PUBLIC        IE
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 8
 
 
   C:0797H         PUBLIC        I2CReadNAK
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   D:0004H         SYMBOL        mask
   -------         ENDDO         
   C:076CH         LINE#         45
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 9
 
 
   C:076EH         LINE#         49
@@ -539,7 +539,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   C:0742H         LINE#         97
   C:0747H         LINE#         98
   C:074AH         LINE#         99
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 10
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 10
 
 
   C:074CH         LINE#         100
@@ -599,7 +599,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   C:0853H         LINE#         40
   -------         ENDPROC       MAIN
   -------         PROC          INITSHOWSTR
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 11
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 11
 
 
   -------         DO            
@@ -659,7 +659,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   C:0463H         LINE#         82
   C:0471H         LINE#         83
   C:0474H         LINE#         84
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 12
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 12
 
 
   C:0477H         LINE#         85
@@ -719,7 +719,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   -------         ENDPROC       _UARTACTION
   -------         ENDMOD        MAIN
 
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 13
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 13
 
 
   -------         MODULE        UART
@@ -779,7 +779,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   C:06FFH         LINE#         38
   C:0701H         LINE#         39
   C:0701H         LINE#         40
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 14
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 14
 
 
   -------         ENDPROC       INTERRUPTUART
@@ -839,7 +839,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\main (?C_STARTUP)
   -------         DO            
   D:0005H         SYMBOL        len
   X:0040H         SYMBOL        buf
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  01:19:29  PAGE 15
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  06/13/2019  17:04:13  PAGE 15
 
 
   -------         ENDDO         
