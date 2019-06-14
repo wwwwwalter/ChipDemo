@@ -1,0 +1,144 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/13/2019 23:42:35 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Dev\program\51keil9\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          sbit PWMOUT=P0^0;
+   4          
+   5          unsigned char HighRH=0;
+   6          unsigned char HighRL=0;
+   7          unsigned char LowRH=0;
+   8          unsigned char LowRL=0;
+   9          unsigned char T1RH=0;
+  10          unsigned char T1RL=0;
+  11          unsigned long PeriodCnt=0;
+  12          
+  13          void ConfigTimer1(unsigned int ms);
+  14          void ConfigPWM(unsigned int fr,unsigned int dc);
+  15          void AdjustDutyCycle(unsigned char dc);
+  16          
+  17          void main(){    
+  18   1              EA=1;
+  19   1              ConfigPWM(100,10);
+  20   1              ConfigTimer1(1);
+  21   1              while(1);
+  22   1      }
+  23          
+  24          void ConfigPWM(unsigned int fr,unsigned int dc){
+  25   1              unsigned int high;
+  26   1              unsigned int low;       
+  27   1              
+  28   1              PeriodCnt=24576000/12/fr;
+  29   1              high=(PeriodCnt*dc)/100;
+  30   1              low=PeriodCnt-high;
+  31   1              high=65536-high+12;
+  32   1              low=65536-low+12;
+  33   1              
+  34   1              HighRH=(unsigned char)(high>>8);
+  35   1              HighRL=(unsigned char)high;
+  36   1              LowRH=(unsigned char)(low>>8);
+  37   1              LowRL=(unsigned char)low;
+  38   1              
+  39   1              TMOD&=0xf0;
+  40   1              TMOD|=0x01;
+  41   1              TH0=HighRH;
+  42   1              TL0=HighRL;
+  43   1              ET0=1;
+  44   1              TR0=1;
+  45   1              PWMOUT=1;
+  46   1      }
+  47          
+  48          void InterruptTimer0() interrupt 1{
+  49   1              if(PWMOUT==1){
+  50   2                      TH0=LowRH;
+  51   2                      TL0=LowRL;
+  52   2                      PWMOUT=0;
+  53   2              }else{
+  54   2                      TH0=HighRH;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/13/2019 23:42:35 PAGE 2   
+
+  55   2                      TL0=HighRL;
+  56   2                      PWMOUT=1;
+  57   2              }
+  58   1      }
+  59          
+  60          void AdjustDutyCycle(unsigned char dc){
+  61   1              unsigned int high;
+  62   1              unsigned int low;
+  63   1              high=(PeriodCnt*dc)/100;
+  64   1              low=PeriodCnt-high;
+  65   1              high=65536-high+12;
+  66   1              low=65536-low+12;
+  67   1              
+  68   1              HighRH=(unsigned char)(high>>8);
+  69   1              HighRL=(unsigned char)high;
+  70   1              LowRH=(unsigned char)(low>>8);
+  71   1              LowRL=(unsigned char)low;
+  72   1      }
+  73          
+  74          void ConfigTimer1(unsigned int ms){
+  75   1              unsigned long tmp;
+  76   1              tmp=24576000/12/1000*ms;
+  77   1              tmp=65536-tmp;
+  78   1              tmp+=12;
+  79   1              T1RH=(unsigned char)(tmp>>8);
+  80   1              T1RL=(unsigned char)tmp;
+  81   1              TMOD&=0x0f;
+  82   1              TMOD|=0x10;
+  83   1              TH1=T1RH;
+  84   1              TL1=T1RL;
+  85   1              ET1=1;
+  86   1              TR1=1;
+  87   1      }
+  88          
+  89          void InterruptTimer1() interrupt 3{
+  90   1              static unsigned int i=0;
+  91   1              static bit dir=0;
+  92   1              static unsigned char index=0;
+  93   1              unsigned char code table[13]={
+  94   1                      5, 18, 30, 41, 51, 60, 68, 75, 81, 86, 90, 93, 95
+  95   1              };
+  96   1              
+  97   1              TH1=T1RH;
+  98   1              TL1=T1RL;
+  99   1              
+ 100   1              i++;
+ 101   1              if(i>=50){
+ 102   2                      i=0;
+ 103   2                      AdjustDutyCycle(table[index]);
+ 104   2                      if(dir==0){
+ 105   3                              index++;
+ 106   3                              if(index>=12){
+ 107   4                                      dir=1;
+ 108   4                              }
+ 109   3                      }else{
+ 110   3                              index--;
+ 111   3                              if(index==0){
+ 112   4                                      dir=0;
+ 113   4                              }
+ 114   3                      }
+ 115   2              }       
+ 116   1      }
+C51 COMPILER V9.60.0.0   MAIN                                                              06/13/2019 23:42:35 PAGE 3   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    437    ----
+   CONSTANT SIZE    =     13    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
